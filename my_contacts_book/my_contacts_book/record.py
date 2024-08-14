@@ -2,6 +2,7 @@ from typing import List, Optional
 from name import Name
 from phone import Phone
 from birthday import Birthday
+from email import Email
 
 class Record:
     """
@@ -23,6 +24,7 @@ class Record:
         self.name = Name(name)
         self.phones: List[Phone] = []
         self.birthday: Optional[Birthday] = None
+        self.email: Optional[Email] = None
 
     def add_phone(self, phone: str) -> None:
         """
@@ -77,6 +79,15 @@ class Record:
             birthday (str): The birthday value in DD.MM.YYYY format.
         """
         self.birthday = Birthday(birthday)
+
+    def add_email(self, email) -> None:
+        """
+        Add an email to the contact
+
+        Args:
+        email(str): The email value example@example.com format
+        """
+        self.email = Email(email)
 
     def __str__(self) -> str:
         """
