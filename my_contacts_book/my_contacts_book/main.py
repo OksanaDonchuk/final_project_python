@@ -1,11 +1,10 @@
 import pickle
 from transliteration import suggest_command, transliterate
 from address_book import AddressBook
-from notes import Notes
+# from notes import Notes
 from handlers import (
     add_contact, change_birthday, change_contact, delete_contact, show_phone, show_all,
-    add_birthday, show_birthday, birthdays, add_email, add_address, add_note, delete_note, change_note, find_note_by_title, find_note_by_tag, show_all_notes
-)
+    add_birthday, show_birthday, birthdays, add_email)
 
 from colorama import init, Fore, Style
 
@@ -39,26 +38,26 @@ def load_data(filename: str = "addressbook.pkl") -> AddressBook:
         return AddressBook()
 
 
-def save_notes(notes: Notes, filename: str = "notes.pkl") -> None:
-    with open(filename, "rb") as file:
-        data = pickle.load(file)
-        data["notes"] = notes
-        with open(filename, "wb") as file:
-            pickle.dump(data, file)
+# def save_notes(notes: Notes, filename: str = "notes.pkl") -> None:
+#     with open(filename, "rb") as file:
+#         data = pickle.load(file)
+#         data["notes"] = notes
+#         with open(filename, "wb") as file:
+#             pickle.dump(data, file)
             
-def load_notes(filename: str = "notes.pkl") -> Notes:
-    try:
-        with open(filename, "rb") as file:
-            data = pickle.load(file)
-            return data.get("notes", Notes())
-    except FileNotFoundError:
-        return Notes()
+# def load_notes(filename: str = "notes.pkl") -> Notes:
+#     try:
+#         with open(filename, "rb") as file:
+#             data = pickle.load(file)
+#             return data.get("notes", Notes())
+#     except FileNotFoundError:
+#         return Notes()
     
-def sort_by_tag(self, tag: str) -> list:
-        if not tag:
-            raise ValueError("Tag is required")
-        filtered_notes = self.find_note_by_tag(tag)
-        return sorted(filtered_notes, key=lambda note: note.title.value)    
+# def sort_by_tag(self, tag: str) -> list:
+#         if not tag:
+#             raise ValueError("Tag is required")
+#         filtered_notes = self.find_note_by_tag(tag)
+#         return sorted(filtered_notes, key=lambda note: note.title.value)    
     
 def print_message(message: str, is_error: bool = False) -> None:
     """
@@ -73,7 +72,7 @@ def print_message(message: str, is_error: bool = False) -> None:
     else:
         print(Fore.GREEN + message + Style.RESET_ALL)
 
-def handle_action(action: str, args: list[str], notes: Notes, book: AddressBook) -> str:
+def handle_action(action: str, args: list[str], book: AddressBook) -> str:
     """
     Handles the action by calling the appropriate function using match...case.
 
@@ -111,18 +110,18 @@ def handle_action(action: str, args: list[str], notes: Notes, book: AddressBook)
             return add_address (args, book)
         case "delete":
             return delete_contact(args, book)
-        case "add-note":
-            return(add_note(args, notes))
-        case "change-note":
-            return(change_note(args, notes))
-        case "delete-note":
-            return(delete_note(args, notes))
-        case "find-note-by-tag":
-            return(find_note_by_tag(args, notes))
-        case "find-note-by-title":
-            return(find_note_by_title(args, notes))
-        case "show-all-notes":
-            return(show_all_notes(notes))
+        # case "add-note":
+        #     return(add_note(args, notes))
+        # case "change-note":
+        #     return(change_note(args, notes))
+        # case "delete-note":
+        #     return(delete_note(args, notes))
+        # case "find-note-by-tag":
+        #     return(find_note_by_tag(args, notes))
+        # case "find-note-by-title":
+        #     return(find_note_by_title(args, notes))
+        # case "show-all-notes":
+        #     return(show_all_notes(notes))
         case "help":
             return print_help()
         case "close" | "exit" | "bye":
@@ -181,7 +180,7 @@ def main() -> None:
     Main function to run the assistant bot.
     """
     book = load_data() 
-    notes = load_notes()
+    # notes = load_notes()
     print(f"{Fore.BLUE}Welcome to the assistant bot!{Style.RESET_ALL}")
     print(print_help()) 
     while True:
@@ -197,11 +196,11 @@ def main() -> None:
             if confirm == 'y':
                 action = suggested_command
 
-        response = handle_action(action, args, book, notes)
+        response = handle_action(action, args, book)
         print(response)
         if action in ["close", "exit", "bye"]:
             save_data(book)
-            save_notes(notes)
+            # save_notes(notes)
             break
 
 if __name__ == "__main__":
