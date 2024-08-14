@@ -3,7 +3,7 @@ from transliteration import suggest_command, transliterate
 from address_book import AddressBook
 from handlers import (
     add_contact, change_birthday, change_contact, delete_contact, show_phone, show_all,
-    add_birthday, show_birthday, birthdays
+    add_birthday, show_birthday, birthdays, add_email
 )
 from colorama import init, Fore, Style
 
@@ -80,6 +80,8 @@ def handle_action(action: str, args: list[str], book: AddressBook) -> str:
             return birthdays(args, book)
         case "change-birthday":
             return change_birthday(args, book)
+        case "add-email":
+            return add_email(args, book)
         case "delete":
             return delete_contact(args, book)
         case "help":
@@ -87,7 +89,7 @@ def handle_action(action: str, args: list[str], book: AddressBook) -> str:
         case "close" | "exit" | "bye":
             return "Good bye!"
         case _:
-            return "Invalid command. Available commands are: hello, add, change, phone, all, add-birthday, show-birthday, birthdays, change-birthday, delete, close, exit, bye."
+            return "Invalid command. Available commands are: hello, add, change, phone, all, add-birthday, show-birthday, birthdays, change-birthday, add-email, delete, close, exit, bye."
 
 def parse_input(user_input: str) -> tuple[str, list[str]]:
     """
@@ -124,6 +126,7 @@ def print_help() -> str:
     - show-birthday <name>: Shows the birthday for the specified contact.
     - birthdays: Shows upcoming birthdays within the next 7 days.
     - change-birthday <name> <new_birthday>: Changes the birthday for an existing contact.
+    - add-email <name> <email>: Add an email to the specified contact.
     - delete <name>: Deletes a contact from the address book.
     - close / exit / bye: Exits the program.{Style.RESET_ALL}
     """

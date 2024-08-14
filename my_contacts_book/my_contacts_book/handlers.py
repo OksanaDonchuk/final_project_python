@@ -3,6 +3,7 @@ from typing import List
 from address_book import AddressBook
 from birthday import Birthday
 from record import Record
+from email import Email
 from colorama import Fore, Style
 from prettytable import PrettyTable
 
@@ -136,11 +137,12 @@ def show_all(book: AddressBook) -> str:
         return f"{Fore.YELLOW}The address book is empty.{Style.RESET_ALL}"
     
     table = PrettyTable()
-    table.field_names = ["Name", "Phones", "Birthday"]
+    table.field_names = ["Name", "Phones", "Birthday", "Email"]
     for record in book.values():
         phones = ", ".join([str(phone) for phone in record.phones])
         birthday = str(record.birthday) if record.birthday else ""
-        table.add_row([record.name, phones, birthday])
+        email = str(record.email) if record.email else ""
+        table.add_row([record.name, phones, birthday, email])
     return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
 
 @input_error
@@ -186,6 +188,29 @@ def add_birthday(args: List[str], book: AddressBook) -> str:
     if record:
         record.add_birthday(birthday)
         return f"{Fore.GREEN}Birthday added.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+@input_error
+def add_email(args: List[str], book: AddressBook) -> str:
+    """
+    Add a email to the specified contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) != 2:
+        raise ValueError("Error: Give me name and email please.")
+    
+    name, email = args
+    name = name.capitalize()
+    record = book.find(name)
+    if record:
+        record.add_email(email)
+        return f"{Fore.GREEN}Email added.{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
 @input_error
