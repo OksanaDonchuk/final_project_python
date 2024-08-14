@@ -3,8 +3,9 @@ from transliteration import suggest_command, transliterate
 from address_book import AddressBook
 # from notes import Notes
 from handlers import (
-    add_contact, change_birthday, change_contact, delete_contact, show_phone, show_all,
+    change_birthday, change_contact, delete_contact, show_phone, show_all,
     add_birthday, show_birthday, birthdays, add_email, add_address, delete_address, change_address)
+
 
 from colorama import init, Fore, Style
 
@@ -131,7 +132,7 @@ def handle_action(action: str, args: list[str], book: AddressBook) -> str:
         case "close" | "exit" | "bye":
             return "Good bye!"
         case _:
-            return "Invalid command. Available commands are: hello, add, change, phone, all, add-birthday, show-birthday, birthdays, change-birthday, add-email, delete, close, exit, bye."
+            return "Invalid command. The available commands are described in the help: command – help"
 
 def parse_input(user_input: str) -> tuple[str, list[str]]:
     """
@@ -197,6 +198,7 @@ def main() -> None:
         action, args = parse_input(user_input)
 
         suggested_command = suggest_command(action, ["hello", "add", "change", "phone", "all", "add-birthday", "show-birthday", "birthdays", "change-birthday", "add-address", "delete-address", "change-address", "delete", "add-note", "change-note", "delete-note", "show-all-notes", "find-note-by-title", "find-note-by-tag", "help", "close", "exit", "bye"])
+
         if suggested_command and suggested_command != action:
             confirm = input(f"Do you mean '{suggested_command}'? (y/n): ").strip().lower()
             if confirm == 'y':

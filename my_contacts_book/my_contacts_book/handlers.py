@@ -208,7 +208,7 @@ def add_address(args: List[str], book: AddressBook) -> str:
     
     name, *address_parts = args
     name = name.capitalize()
-    address = " ".join(address_parts)
+    address = " ".join(address_parts).title()
     
     record = book.find(name)
     if record:
