@@ -4,8 +4,9 @@ from address_book import AddressBook
 from notes import Notes
 from handlers import (
     add_contact, change_birthday, change_contact, delete_contact, show_phone, show_all,
-    add_birthday, show_birthday, birthdays, add_email, add_note, delete_note, change_note, find_note_by_title, find_note_by_tag, show_all_notes
+    add_birthday, show_birthday, birthdays, add_email
 )
+
 from colorama import init, Fore, Style
 
 init(autoreset=True)
@@ -106,18 +107,6 @@ def handle_action(action: str, args: list[str], notes: Notes, book: AddressBook)
             return change_birthday(args, book)
         case "add-email":
             return add_email(args, book)
-        case "add-note":
-            return(add_note(args, notes))
-        case "change-note":
-            return(change_note(args, notes))
-        case "delete-note":
-            return(delete_note(args, notes))
-        case "find-note-by-tag":
-            return(find_note_by_tag(args, notes))
-        case "find-note-by-title":
-            return(find_note_by_title(args, notes))
-        case "show-all-notes":
-            return(show_all_notes(notes))
         case "delete":
             return delete_contact(args, book)
         case "help":
@@ -163,6 +152,7 @@ def print_help() -> str:
     - birthdays: Shows upcoming birthdays within the next 7 days.
     - change-birthday <name> <new_birthday>: Changes the birthday for an existing contact.
     - add-email <name> <email>: Add an email to the specified contact.
+    - add-address <name> <address>: Adds an address to the specified contact.
     - delete <name>: Deletes a contact from the address book.
     - close / exit / bye: Exits the program.{Style.RESET_ALL}
     """
@@ -183,7 +173,7 @@ def main() -> None:
 
         action, args = parse_input(user_input)
 
-        suggested_command = suggest_command(action, ["hello", "add", "change", "phone", "all", "add-birthday", "show-birthday", "birthdays", "change-birthday", "delete", "help", "close", "exit", "bye"])
+        suggested_command = suggest_command(action, ["hello", "add", "change", "phone", "all", "add-birthday", "show-birthday", "birthdays", "change-birthday", "add-address", "delete", "help", "close", "exit", "bye"])
         if suggested_command and suggested_command != action:
             confirm = input(f"Do you mean '{suggested_command}'? (y/n): ").strip().lower()
             if confirm == 'y':
