@@ -314,6 +314,49 @@ def show_all(book: AddressBook) -> str:
         table.add_row([record.name, phones, birthday, email, address])
     return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
     
+@input_error
+def delete_address(args: List[str], book: AddressBook) -> str:
+    """
+    Deletes a address from the contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) != 1:
+        raise ValueError("Error: Give me name, please.")
     
+    name = args[0].capitalize()
+    record = book.find(name)
+    if record:
+        record.add_address('–')
+        return f"{Fore.GREEN}{name}`s address has been deleted.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
 
+@input_error
+def change_address(args: List[str], book: AddressBook) -> str:
+    """
+    Change a address from the contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) < 2:
+        raise ValueError("Give me the name of the contact and the new address.")
+    
+    name, *address_parts = args
+    name = name.capitalize()
+    address = " ".join(address_parts)
+    record = book.find(name)
+    if record:
+        record.add_address(address)
+        return f"{Fore.GREEN}{name}`s address has been changed.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
