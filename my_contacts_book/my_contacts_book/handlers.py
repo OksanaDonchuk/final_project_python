@@ -360,3 +360,33 @@ def change_address(args: List[str], book: AddressBook) -> str:
         record.add_address(address)
         return f"{Fore.GREEN}{name}`s address has been changed.{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+def show_contact(args: List[str], book: AddressBook) -> str:
+    """
+    Shows the the specified contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) != 1:
+        raise ValueError("Give me contact name, please.")
+
+    name = args[0].capitalize()
+    record = book.find(name)
+    print(record)
+    if record:
+        table = PrettyTable()
+        table.field_names = ["Name", "Phones", "Birthday", "Email", "Address"]
+
+        phones = ", ".join([str(phone) for phone in record.phones])
+        birthday = record.birthday if record.birthday else "–"
+        email = record.email if record.email else "–"
+        address = record.address if record.address else "–"
+
+        table.add_row([record.name, phones, birthday, email, address])
+        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
