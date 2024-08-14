@@ -291,6 +291,31 @@ def birthdays(args: List[str], book: AddressBook) -> str:
     return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
 
 @input_error
+def show_all(book: AddressBook) -> str:
+    """
+    Shows all contacts in the address book.
+
+    Args:
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if not book:
+        return f"{Fore.YELLOW}The address book is empty.{Style.RESET_ALL}"
+    
+    table = PrettyTable()
+    table.field_names = ["Name", "Phones", "Birthday", "Email", "Address"]
+    for name, record in book.data.items():
+        phones = ", ".join([str(phone) for phone in record.phones])
+        birthday = str(record.birthday) if record.birthday else "–"
+        email = str(record.email) if record.email else "–"
+        address = str(record.address) if hasattr(record, 'address') and record.address else "–"
+        table.add_row([record.name, phones, birthday, email, address])
+    return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+    
+    
+@input_error
 def add_note(args: List[str], notes: Notes) -> str:
 
     title = input(("Enter a title: "))
