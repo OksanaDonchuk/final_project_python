@@ -3,6 +3,7 @@ from name import Name
 from phone import Phone
 from birthday import Birthday
 from email import Email
+from address import Address
 
 class Record:
     """
@@ -12,6 +13,8 @@ class Record:
         name (Name): The name of the contact.
         phones (List[Phone]): The list of phone numbers associated with the contact.
         birthday (Optional[Birthday]): The birthday of the contact.
+        email (Optional[Email]): The email address of the contact.
+        address (Optional[Address]): The address of the contact.
     """
 
     def __init__(self, name: str):
@@ -25,6 +28,7 @@ class Record:
         self.phones: List[Phone] = []
         self.birthday: Optional[Birthday] = None
         self.email: Optional[Email] = None
+        self.address: Optional[Address] = None
 
     def add_phone(self, phone: str) -> None:
         """
@@ -88,6 +92,15 @@ class Record:
         email(str): The email value example@example.com format
         """
         self.email = Email(email)
+        
+    def add_address(self, address: str) -> None:
+        """
+        Adds an address to the contact.
+
+        Args:
+            address (str): The address as a string.
+        """
+        self.address = Address(address)
 
     def __str__(self) -> str:
         """
@@ -98,4 +111,6 @@ class Record:
         """
         phones = ", ".join([str(phone) for phone in self.phones])
         birthday = f", Birthday: {self.birthday}" if self.birthday else ""
-        return f"Name: {self.name}, Phones: {phones}{birthday}"
+        address = f", Address: {self.address}" if self.address else ""
+        email = f", Email: {self.email}" if self.email else ""
+        return f"Name: {self.name}, Phones: {phones}{birthday}{email}{address}"

@@ -39,7 +39,7 @@ def add_contact(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) < 2:
-        raise ValueError("Error: Give me name and phone please.")
+        raise ValueError("Give me name and phone please.")
     
     name, phone, *optional_args = args
     name = name.capitalize()
@@ -95,7 +95,7 @@ def change_contact(args: List[str], book: AddressBook) -> str:
         return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
     
     else:
-        raise ValueError("Error: Give me name, old phone and new phone please or name and phone to remove.")
+        raise ValueError("Give me name, old phone and new phone please or name and phone to remove.")
 
 @input_error
 def show_phone(args: List[str], book: AddressBook) -> str:
@@ -110,7 +110,7 @@ def show_phone(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) != 1:
-        raise ValueError("Error: Give me name, please.")
+        raise ValueError("Give me name, please.")
     
     name = args[0].capitalize()
     record = book.find(name)
@@ -121,29 +121,6 @@ def show_phone(args: List[str], book: AddressBook) -> str:
         table.add_row([name, phones])
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
-
-@input_error
-def show_all(book: AddressBook) -> str:
-    """
-    Shows all contacts in the address book.
-
-    Args:
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: The response message.
-    """
-    if not book:
-        return f"{Fore.YELLOW}The address book is empty.{Style.RESET_ALL}"
-    
-    table = PrettyTable()
-    table.field_names = ["Name", "Phones", "Birthday", "Email"]
-    for record in book.values():
-        phones = ", ".join([str(phone) for phone in record.phones])
-        birthday = str(record.birthday) if record.birthday else ""
-        email = str(record.email) if record.email else ""
-        table.add_row([record.name, phones, birthday, email])
-    return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
 
 @input_error
 def delete_contact(args: List[str], book: AddressBook) -> str:
@@ -180,7 +157,7 @@ def add_birthday(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) != 2:
-        raise ValueError("Error: Give me name and birthday please.")
+        raise ValueError("Give me name and birthday please.")
     
     name, birthday = args
     name = name.capitalize()
@@ -203,7 +180,7 @@ def add_email(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) != 2:
-        raise ValueError("Error: Give me name and email please.")
+        raise ValueError("Give me name and email please.")
     
     name, email = args
     name = name.capitalize()
@@ -211,6 +188,31 @@ def add_email(args: List[str], book: AddressBook) -> str:
     if record:
         record.add_email(email)
         return f"{Fore.GREEN}Email added.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+@input_error
+def add_address(args: List[str], book: AddressBook) -> str:
+    """
+    Adds an address to the specified contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) < 2:
+        raise ValueError("Give me name and address please.")
+    
+    name, *address_parts = args
+    name = name.capitalize()
+    address = " ".join(address_parts)
+    
+    record = book.find(name)
+    if record:
+        record.add_address(address)
+        return f"{Fore.GREEN}Address added.{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
 @input_error
@@ -251,7 +253,7 @@ def change_birthday(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) != 2:
-        raise ValueError("Error: Give me the name of the contact and the new birthday please.")
+        raise ValueError("Give me the name of the contact and the new birthday please.")
 
     name, new_birthday = args
     name = name.capitalize()
@@ -286,3 +288,43 @@ def birthdays(args: List[str], book: AddressBook) -> str:
         phones = ", ".join([str(phone) for phone in record.phones])
         table.add_row([record.name, record.birthday, phones])
     return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+
+@input_error
+def show_all(book: AddressBook) -> str:
+    """
+    Shows all contacts in the address book.
+
+    Args:
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if not book:
+        return f"{Fore.YELLOW}The address book is empty.{Style.RESET_ALL}"
+    
+    table = PrettyTable()
+    table.field_names = ["Name", "Phones", "Birthday", "Email", "Address"]
+    for name, record in book.data.items():
+        phones = ", ".join([str(phone) for phone in record.phones])
+        birthday = str(record.birthday) if record.birthday else "–"
+        email = str(record.email) if record.email else "–"
+        address = str(record.address) if hasattr(record, 'address') and record.address else "–"
+        
+    # for record in book.values():
+    #     phones = ", ".join([str(phone) for phone in record.phones])
+    #     birthday = str(record.birthday) if record.birthday else ""
+    #     email = str(record.email) if record.email else ""
+    #     address = str(record.address) if record.address else ""
+        table.add_row([record.name, phones, birthday, email, address])
+    return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+    
+    # result = []
+    # for name, record in book.data.items():
+    #    
+    #     birthday = str(record.birthday) if record.birthday else "N/A"
+    #     email = str(record.email) if record.email else "N/A"
+    #     address = str(record.address) if hasattr(record, 'address') and record.address else "N/A"
+    #     result.append(f"{name}: Phone(s): {phones}, Birthday: {birthday}, Email: {email}, Address: {address}")
+
+    # return "\n".join(result)
