@@ -4,6 +4,7 @@ from address_book import AddressBook
 from birthday import Birthday
 from record import Record
 from email import Email
+from notes import Notes
 from colorama import Fore, Style
 from prettytable import PrettyTable
 
@@ -310,21 +311,9 @@ def show_all(book: AddressBook) -> str:
         birthday = str(record.birthday) if record.birthday else "–"
         email = str(record.email) if record.email else "–"
         address = str(record.address) if hasattr(record, 'address') and record.address else "–"
-        
-    # for record in book.values():
-    #     phones = ", ".join([str(phone) for phone in record.phones])
-    #     birthday = str(record.birthday) if record.birthday else ""
-    #     email = str(record.email) if record.email else ""
-    #     address = str(record.address) if record.address else ""
         table.add_row([record.name, phones, birthday, email, address])
     return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
     
-    # result = []
-    # for name, record in book.data.items():
-    #    
-    #     birthday = str(record.birthday) if record.birthday else "N/A"
-    #     email = str(record.email) if record.email else "N/A"
-    #     address = str(record.address) if hasattr(record, 'address') and record.address else "N/A"
-    #     result.append(f"{name}: Phone(s): {phones}, Birthday: {birthday}, Email: {email}, Address: {address}")
+    
 
-    # return "\n".join(result)
+
