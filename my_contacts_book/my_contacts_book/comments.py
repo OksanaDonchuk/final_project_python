@@ -1,4 +1,4 @@
-from my_contacts_book.field import Field
+from field import Field
 
 class Title(Field):
     def __init__(self, value):

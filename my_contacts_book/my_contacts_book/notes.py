@@ -1,4 +1,4 @@
-from my_contacts_book.comments import Title, Content, Tags
+from comments import Title, Content, Tags
 
 class Note:
     def __init__(self, title: str, content: str = None, tags: list = None):
