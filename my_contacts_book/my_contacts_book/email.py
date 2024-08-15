@@ -22,6 +22,9 @@ class Email(Field):
         :return: The validated email address.
         :raises ValueError: If the email does not meet the validation criteria.
         """
+        if email == '-':
+            return email
+        
         if len(email) < 3 or len(email) > 150:
             raise ValueError("Email must be between 3 and 150 characters long.")
         
