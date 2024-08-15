@@ -3,7 +3,7 @@ from transliteration import suggest_command, transliterate
 from address_book import AddressBook
 # from notes import Notes
 from handlers import (
-    add_contact, change_birthday, change_contact, delete_contact, show_phone, show_all,
+    add_contact, change_birthday, change_contact, change_name, delete_contact, show_phone, show_all,
     add_birthday, show_birthday, birthdays, add_email, delete_email, change_email, add_address, delete_address, change_address, show_contact)
 
 
@@ -93,6 +93,8 @@ def handle_action(action: str, args: list[str], book: AddressBook) -> str:
             return add_contact(args, book)
         case "change":
             return change_contact(args, book)
+        case "change-name":
+            return change_name(args, book)
         case "phone":
             return show_phone(args, book)
         case "contact":
@@ -169,6 +171,7 @@ def print_help() -> str:
                           If the contact already exists but with a different number, the contact will be updated.
     - change <name> <old_phone> <new_phone>: Changes the phone number for an existing contact. 
                                              If only the name and the existing number are provided, the number will be removed.
+    - change-name <old_name> <new_name>: Changes the name of an existing contact.
     - phone <name>: Shows the phone number for the specified contact.
     - contact <name>: Shows the the specified contact.
     - all: Shows all contacts with their phone numbers.
@@ -206,7 +209,8 @@ def main() -> None:
 
         action, args = parse_input(user_input)
 
-        suggested_command = suggest_command(action, ["hello", "add", "change", "phone", "all", "add-birthday", "show-birthday", "birthdays", "change-birthday", "add-email", "delete-email", "change-email", "add-address", "delete-address", "change-address", "delete", "add-note", "change-note", "delete-note", "show-all-notes", "find-note-by-title", "find-note-by-tag", "help", "close", "exit", "bye", "contact"])
+        COMMANDS = ["hello", "add", "change-name", "change", "phone", "all", "add-birthday", "show-birthday", "birthdays", "change-birthday", "add-email", "delete-email", "change-email", "add-address", "delete-address", "change-address", "delete", "add-note", "change-note", "delete-note", "show-all-notes", "find-note-by-title", "find-note-by-tag", "help", "close", "exit", "bye", "contact"]
+        suggested_command = suggest_command(action, COMMANDS)
 
         if suggested_command and suggested_command != action:
             confirm = input(f"Do you mean '{suggested_command}'? (y/n): ").strip().lower()

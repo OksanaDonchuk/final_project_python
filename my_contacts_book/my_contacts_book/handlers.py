@@ -48,7 +48,7 @@ def add_contact(args: List[str], book: AddressBook) -> str:
     
     existing_record = book.find(name)
     if existing_record and any(phone == p.value for p in existing_record.phones):
-        return f"{Fore.YELLOW}Contact with this name and phone number already exists.{Style.RESET_ALL}"
+        return f"{Fore.YELLOW}Contact with name {name} and phone {phone} number already exists.{Style.RESET_ALL}"
     
     if existing_record:
         existing_record.add_phone(phone)
@@ -97,6 +97,36 @@ def change_contact(args: List[str], book: AddressBook) -> str:
     
     else:
         raise ValueError("Give me name, old phone and new phone please or name and phone to remove.")
+    
+@input_error
+def change_name(args: list[str], book: AddressBook) -> str:
+    """
+    Changes the name of an existing contact.
+
+    Args:
+        args (list[str]): The arguments containing the old name and the new name.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: A message indicating the result of the operation.
+    """
+    if len(args) < 2:
+        raise ValueError("Provide the current name and the new name.") 
+    
+    old_name = args[0].capitalize()
+    new_name = args[1].capitalize()
+    
+    if old_name not in book:
+        return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+    
+    if new_name in book:
+        return f"{Fore.YELLOW}Contact with this name {new_name} already exists.{Style.RESET_ALL}"
+
+    contact = book[old_name]
+    del book[old_name]
+    contact.name = new_name
+    book[new_name] = contact
+    return f"{Fore.GREEN}Contact name changed from '{old_name}' to '{new_name}'.{Style.RESET_ALL}"
 
 @input_error
 def show_phone(args: List[str], book: AddressBook) -> str:
@@ -398,7 +428,7 @@ def change_address(args: List[str], book: AddressBook) -> str:
     
     name, *address_parts = args
     name = name.capitalize()
-    address = " ".join(address_parts)
+    address = " ".join(address_parts).title()
     record = book.find(name)
     if record:
         record.add_address(address)
