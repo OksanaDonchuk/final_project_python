@@ -4,7 +4,7 @@ from address_book import AddressBook
 # from notes import Notes
 from handlers import (
     add_contact, change_birthday, change_contact, change_name, delete_contact, show_phone, show_all,
-    add_birthday, show_birthday, show_email, birthdays, add_email, delete_email, change_email, add_address, delete_address, change_address, show_contact)
+    add_birthday, show_birthday, show_email, show_address, birthdays, add_email, delete_email, change_email, add_address, delete_address, change_address, show_contact)
 
 
 from colorama import init, Fore, Style
@@ -105,6 +105,8 @@ def handle_action(action: str, args: list[str], book: AddressBook) -> str:
             return add_birthday(args, book)
         case "show-birthday":
             return show_birthday(args, book)
+        case "show_address":
+            return show_address(args, book)
         case "birthdays":
             return birthdays(args, book)
         case "change-birthday":
@@ -188,6 +190,7 @@ def print_help() -> str:
     - add-address <name> <address>: Adds an address to the specified contact.
     - delete-address <name>: Delete an address to the specified contact.
     - change-address <name> <new address>: Change an address to the specified contact.
+    - show_address <name>:  Shows the address for the specified contact.
     - delete <name>: Deletes a contact from the address book.
     - add-note
     - change-note
@@ -212,7 +215,7 @@ def main() -> None:
 
         action, args = parse_input(user_input)
 
-        COMMANDS = ["hello", "add", "change-name", "change", "phone", "all", "add-birthday", "show-birthday",  "birthdays", "change-birthday", "show_email", "add-email", "delete-email", "change-email", "add-address", "delete-address", "change-address", "delete", "add-note", "change-note", "delete-note", "show-all-notes", "find-note-by-title", "find-note-by-tag", "help", "close", "exit", "bye", "contact"]
+        COMMANDS = ["hello", "add", "change-name", "change", "phone", "all", "add-birthday", "show-birthday",  "birthdays", "change-birthday", "show_email", "show_address", "add-email", "delete-email", "change-email", "add-address", "delete-address", "change-address", "delete", "add-note", "change-note", "delete-note", "show-all-notes", "find-note-by-title", "find-note-by-tag", "help", "close", "exit", "bye", "contact"]
         
         suggested_command = suggest_command(action, COMMANDS)
 
