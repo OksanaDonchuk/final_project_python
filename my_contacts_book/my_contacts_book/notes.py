@@ -1,15 +1,16 @@
 from comments import Title, Content, Tags
 
+
 class Note:
     def __init__(self, title: str, content: str = None, tags: list = None):
         if not title:
             raise ValueError("Title cannot be empty.")
         self.title = Title(title)
-        self.content = Content(content) if content else Content("") 
-        self.tags = tags if tags else [] 
+        self.content = Content(content) if content else Content("")
+        self.tags = tags if tags else []
 
     def __str__(self) -> str:
-        
+
         title_str = f"Title: {self.title.value}"
         content_str = f"Content: {self.content.value}" if self.content.value else ""
         tags_str = f"Tags: {', '.join(self.tags)}" if self.tags else ""
@@ -30,6 +31,7 @@ class Note:
         self.tags.extend(tag for tag in new_tags if tag not in self.tags)
         return f"Tags added to note with title: '{self.title.value}'."
 
+
 class Notes:
     def __init__(self):
         self.notes = []
@@ -40,7 +42,7 @@ class Notes:
         note = Note(title, content, tags.split(",") if tags else [])
         self.notes.append(note)
         return f"Note with title: '{title}' successfully added."
-    
+
     def delete_note(self, title: str) -> str:
         note = self.find_note_by_title(title)
         if note:
