@@ -141,11 +141,7 @@ def handle_action(action: str, args: list[str], book: AddressBook, notes: Notes)
         case "delete-note":
             return delete_note(args, notes)
         case "find-note-by-tag":
-            # return find_note_by_tag(args, notes)
-            # if args:
-            return find_note_by_tag(notes, args[0])
-        # else:
-        #     return "No tag provided."
+            return find_note_by_tag(args, notes)
         case "find-note-by-title":
             return find_note_by_title(args, notes)
         case "show-all-notes":

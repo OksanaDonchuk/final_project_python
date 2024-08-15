@@ -29,6 +29,7 @@ def input_error(func):
             return "Error: Missing argument."
         except Exception as e:
             return f"An unexpected error occurred: {e}"
+
     return wrapper
 
 
@@ -90,12 +91,24 @@ def find_note_by_title(notes: Notes) -> str:
         return f"Note with title '{title}' not found."
 
 
+# @input_error
+# def find_note_by_tag(notes: Notes, tag: str) -> str:
+#     tag = input("Enter the tag to search for: ")
+#     notes_with_tag = notes.find_note_by_tag(tag)
+#     if notes_with_tag:
+#         return "\n".join(str(note) for note in notes_with_tag)
+#     else:
+#         return f"No notes found with tag '{tag}'."
 @input_error
-def find_note_by_tag(notes: Notes, tag: str) -> str:
-    tag = input("Enter the tag to search for: ")
+def find_note_by_tag(args: list[str], notes: Notes) -> str:
+    if not args:
+        raise ValueError("Enter the tag to search for:")
+
+    tag = args[0]
     notes_with_tag = notes.find_note_by_tag(tag)
+
     if notes_with_tag:
-        return "\n".join(str(note) for note in notes_with_tag)
+        return "\n\n".join(str(note) for note in notes_with_tag)
     else:
         return f"No notes found with tag '{tag}'."
 
