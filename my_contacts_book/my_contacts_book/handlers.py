@@ -8,6 +8,7 @@ from notes import Notes
 from colorama import Fore, Style
 from prettytable import PrettyTable
 
+
 def input_error(func):
     """
     Decorator to handle input errors and return error messages.
@@ -18,12 +19,14 @@ def input_error(func):
     Returns:
         The wrapped function.
     """
+
     @wraps(func)
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
         except (KeyError, ValueError, IndexError) as e:
             return f"{Fore.YELLOW}Error: {str(e)}{Style.RESET_ALL}"
+
     return inner
 
 
@@ -41,15 +44,15 @@ def add_contact(args: List[str], book: AddressBook) -> str:
     """
     if len(args) < 2:
         raise ValueError("Give me name and phone please.")
-    
+
     name, phone, *optional_args = args
     name = name.capitalize()
     birthday = optional_args[0] if optional_args else None
-    
+
     existing_record = book.find(name)
     if existing_record and any(phone == p.value for p in existing_record.phones):
         return f"{Fore.YELLOW}Contact with name {name} and phone {phone} number already exists.{Style.RESET_ALL}"
-    
+
     if existing_record:
         existing_record.add_phone(phone)
     else:
@@ -83,7 +86,7 @@ def change_contact(args: List[str], book: AddressBook) -> str:
             record.edit_phone(old_phone, new_phone)
             return f"{Fore.GREEN}Phone number updated.{Style.RESET_ALL}"
         return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
-    
+
     elif len(args) == 2:
         name, phone_to_remove = args
         name = name.capitalize()
@@ -95,7 +98,7 @@ def change_contact(args: List[str], book: AddressBook) -> str:
             else:
                 return f"{Fore.YELLOW}Phone number not found in the contact.{Style.RESET_ALL}"
         return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
-    
+
     else:
         raise ValueError("Give me name, old phone and new phone please or name and phone to remove.")
 
@@ -167,14 +170,14 @@ def change_name(args: list[str], book: AddressBook) -> str:
         str: A message indicating the result of the operation.
     """
     if len(args) < 2:
-        raise ValueError("Provide the current name and the new name.") 
-    
+        raise ValueError("Provide the current name and the new name.")
+
     old_name = args[0].capitalize()
     new_name = args[1].capitalize()
-    
+
     if old_name not in book:
         return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
-    
+
     if new_name in book:
         return f"{Fore.YELLOW}Contact with this name {new_name} already exists.{Style.RESET_ALL}"
 
@@ -199,7 +202,7 @@ def show_phone(args: List[str], book: AddressBook) -> str:
     """
     if len(args) != 1:
         raise ValueError("Give me name, please.")
-    
+
     name = args[0].capitalize()
     record = book.find(name)
     if record:
@@ -225,7 +228,7 @@ def add_birthday(args: List[str], book: AddressBook, action: str) -> str:
     """
     if len(args) != 2:
         raise ValueError("Give me name and birthday please.")
-    
+
     name, birthday = args
     name = name.capitalize()
     record = book.find(name)
@@ -301,7 +304,7 @@ def add_email(args: List[str], book: AddressBook, action:str) -> str:
     """
     if len(args) != 2:
         raise ValueError("Give me name and email please.")
-    
+
     name, email = args
     name = name.capitalize()
     record = book.find(name)
@@ -377,11 +380,11 @@ def add_address(args: List[str], book: AddressBook, action:str) -> str:
     """
     if len(args) < 2:
         raise ValueError("Give me name and address please.")
-    
+
     name, *address_parts = args
     name = name.capitalize()
     address = " ".join(address_parts).title()
-    
+
     record = book.find(name)
     if record:
         record.add_address(address)
@@ -439,6 +442,7 @@ def show_address(args: List[str], book: AddressBook) -> str:
         table.add_row([name, address])
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
 
 @input_error
 def show_all(book: AddressBook) -> str:

@@ -3,6 +3,7 @@ from typing import List, Optional
 from record import Record
 from datetime import datetime, timedelta
 
+
 class AddressBook(UserDict):
     """
     Class to represent an address book.
