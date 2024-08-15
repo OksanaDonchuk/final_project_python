@@ -464,3 +464,29 @@ def show_contact(args: List[str], book: AddressBook) -> str:
         table.add_row([record.name, phones, birthday, email, address])
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+
+@input_error
+def show_email(args: List[str], book: AddressBook) -> str:
+    """
+    Shows the email for the specified contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) != 1:
+        raise ValueError("Error: Give me name, please.")
+    
+    name = args[0].capitalize()
+    record = book.find(name)
+    if record:
+        table = PrettyTable()
+        table.field_names = ["Name", "Email"]
+        email = str(record.email) if record.email else "-"
+        table.add_row([name, email])
+        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
