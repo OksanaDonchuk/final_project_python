@@ -62,6 +62,7 @@ def add_contact(args: List[str], book: AddressBook) -> str:
 
     return f"{Fore.GREEN}Contact updated.{Style.RESET_ALL}"
 
+
 @input_error
 def change_contact(args: List[str], book: AddressBook) -> str:
     """
@@ -97,7 +98,62 @@ def change_contact(args: List[str], book: AddressBook) -> str:
     
     else:
         raise ValueError("Give me name, old phone and new phone please or name and phone to remove.")
-    
+
+
+@input_error
+def show_contact(args: List[str], book: AddressBook) -> str:
+    """
+    Shows the the specified contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) != 1:
+        raise ValueError("Give me contact name, please.")
+
+    name = args[0].capitalize()
+    record = book.find(name)
+    if record:
+        table = PrettyTable()
+        table.field_names = ["Name", "Phones", "Birthday", "Email", "Address"]
+
+        phones = ", ".join([str(phone) for phone in record.phones])
+        birthday = record.birthday if record.birthday else "–"
+        email = record.email if record.email else "–"
+        address = record.address if record.address else "–"
+
+        table.add_row([record.name, phones, birthday, email, address])
+        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+
+@input_error
+def delete_contact(args: List[str], book: AddressBook) -> str:
+    """
+    Deletes a contact from the address book.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) != 1:
+        raise ValueError("Error: Give me name, please.")
+
+    name = args[0].capitalize()
+    record = book.find(name)
+    if record:
+        book.delete(name)
+        return f"{Fore.GREEN}Contact deleted.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+
 @input_error
 def change_name(args: list[str], book: AddressBook) -> str:
     """
@@ -128,6 +184,7 @@ def change_name(args: list[str], book: AddressBook) -> str:
     book[new_name] = contact
     return f"{Fore.GREEN}Contact name changed from '{old_name}' to '{new_name}'.{Style.RESET_ALL}"
 
+
 @input_error
 def show_phone(args: List[str], book: AddressBook) -> str:
     """
@@ -153,30 +210,9 @@ def show_phone(args: List[str], book: AddressBook) -> str:
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
-@input_error
-def delete_contact(args: List[str], book: AddressBook) -> str:
-    """
-    Deletes a contact from the address book.
-
-    Args:
-        args (List[str]): The arguments for the command.
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: The response message.
-    """
-    if len(args) != 1:
-        raise ValueError("Error: Give me name, please.")
-    
-    name = args[0].capitalize()
-    record = book.find(name)
-    if record:
-        book.delete(name)
-        return f"{Fore.GREEN}Contact deleted.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
 @input_error
-def add_birthday(args: List[str], book: AddressBook) -> str:
+def add_birthday(args: List[str], book: AddressBook, action: str) -> str:
     """
     Adds a birthday to the specified contact.
 
@@ -195,101 +231,12 @@ def add_birthday(args: List[str], book: AddressBook) -> str:
     record = book.find(name)
     if record:
         record.add_birthday(birthday)
-        return f"{Fore.GREEN}Birthday added.{Style.RESET_ALL}"
+        if(action == 'add-birthday'):
+            return f"{Fore.GREEN}Birthday added.{Style.RESET_ALL}"
+        else:
+           return f"{Fore.GREEN}{name}`s birthday updated.{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
-@input_error
-def add_email(args: List[str], book: AddressBook) -> str:
-    """
-    Add a email to the specified contact.
-
-    Args:
-        args (List[str]): The arguments for the command.
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: The response message.
-    """
-    if len(args) != 2:
-        raise ValueError("Give me name and email please.")
-    
-    name, email = args
-    name = name.capitalize()
-    record = book.find(name)
-    if record:
-        record.add_email(email)
-        return f"{Fore.GREEN}Email added.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
-
-@input_error
-def delete_email(args: List[str], book: AddressBook) -> str:
-    """
-    Deletes an email from the contact.
-
-    Args:
-        args (List[str]): The arguments for the command.
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: The response message.
-    """
-    if len(args) != 1:
-        raise ValueError("Error: Give me name, please.")
-    
-    name = args[0].capitalize()
-    record = book.find(name)
-    if record:
-        record.add_email('-')
-        return f"{Fore.GREEN}{name}`s email has been deleted.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
-
-@input_error
-def change_email(args: List[str], book: AddressBook) -> str:
-    """
-    Change an email from the contact.
-
-    Args:
-        args (List[str]): The arguments for the command.
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: The response message.
-    """
-    if len(args) < 2:
-        raise ValueError("Give me the name of the contact and the new email.")
-    
-    name, email = args
-    name = name.capitalize()
-    record = book.find(name)
-    if record:
-        record.add_email(email)
-        return f"{Fore.GREEN}{name}`s email has been changed.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
-
-@input_error
-def add_address(args: List[str], book: AddressBook) -> str:
-    """
-    Adds an address to the specified contact.
-
-    Args:
-        args (List[str]): The arguments for the command.
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: The response message.
-    """
-    if len(args) < 2:
-        raise ValueError("Give me name and address please.")
-    
-    name, *address_parts = args
-    name = name.capitalize()
-    address = " ".join(address_parts).title()
-    
-    record = book.find(name)
-    if record:
-        record.add_address(address)
-        return f"{Fore.GREEN}Address added.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
 @input_error
 def show_birthday(args: List[str], book: AddressBook) -> str:
@@ -305,7 +252,7 @@ def show_birthday(args: List[str], book: AddressBook) -> str:
     """
     if len(args) != 1:
         raise ValueError("Error: Give me name, please.")
-    
+
     name = args[0].capitalize()
     record = book.find(name)
     if record:
@@ -316,32 +263,6 @@ def show_birthday(args: List[str], book: AddressBook) -> str:
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
-@input_error
-def change_birthday(args: List[str], book: AddressBook) -> str:
-    """
-    Changes the birthday for an existing contact.
-
-    Args:
-        args (List[str]): The arguments for the command.
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: The response message.
-    """
-    if len(args) != 2:
-        raise ValueError("Give me the name of the contact and the new birthday please.")
-
-    name, new_birthday = args
-    name = name.capitalize()
-    record = book.find(name)
-
-    if record:
-        if record.birthday:
-            record.birthday = Birthday(new_birthday)
-            return f"{Fore.GREEN}Birthday updated.{Style.RESET_ALL}" 
-        else:
-            return f"{Fore.YELLOW}Contact has no existing birthday to update.{Style.RESET_ALL}" 
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
 @input_error
 def birthdays(args: List[str], book: AddressBook) -> str:
@@ -365,30 +286,112 @@ def birthdays(args: List[str], book: AddressBook) -> str:
         table.add_row([record.name, record.birthday, phones])
     return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
 
+
 @input_error
-def show_all(book: AddressBook) -> str:
+def add_email(args: List[str], book: AddressBook, action:str) -> str:
     """
-    Shows all contacts in the address book.
+    Add a email to the specified contact.
 
     Args:
+        args (List[str]): The arguments for the command.
         book (AddressBook): The address book instance.
 
     Returns:
         str: The response message.
     """
-    if not book:
-        return f"{Fore.YELLOW}The address book is empty.{Style.RESET_ALL}"
+    if len(args) != 2:
+        raise ValueError("Give me name and email please.")
     
-    table = PrettyTable()
-    table.field_names = ["Name", "Phones", "Birthday", "Email", "Address"]
-    for name, record in book.data.items():
-        phones = ", ".join([str(phone) for phone in record.phones])
-        birthday = str(record.birthday) if record.birthday else "–"
-        email = str(record.email) if record.email else "–"
-        address = str(record.address) if hasattr(record, 'address') and record.address else "–"
-        table.add_row([record.name, phones, birthday, email, address])
-    return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+    name, email = args
+    name = name.capitalize()
+    record = book.find(name)
+    if record:
+        record.add_email(email)
+        if(action == 'add-email'):
+            return f"{Fore.GREEN}Email added.{Style.RESET_ALL}"
+        else:
+            return f"{Fore.GREEN}{name}`s email has been changed.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+
+@input_error
+def delete_email(args: List[str], book: AddressBook) -> str:
+    """
+    Deletes an email from the contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) != 1:
+        raise ValueError("Error: Give me name, please.")
     
+    name = args[0].capitalize()
+    record = book.find(name)
+    if record:
+        record.add_email('-')
+        return f"{Fore.GREEN}{name}`s email has been deleted.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+
+@input_error
+def show_email(args: List[str], book: AddressBook) -> str:
+    """
+    Shows the email for the specified contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) != 1:
+        raise ValueError("Error: Give me name, please.")
+
+    name = args[0].capitalize()
+    record = book.find(name)
+    if record:
+        table = PrettyTable()
+        table.field_names = ["Name", "Email"]
+        email = str(record.email) if record.email else "-"
+        table.add_row([name, email])
+        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+
+@input_error
+def add_address(args: List[str], book: AddressBook, action:str) -> str:
+    """
+    Adds an address to the specified contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) < 2:
+        raise ValueError("Give me name and address please.")
+    
+    name, *address_parts = args
+    name = name.capitalize()
+    address = " ".join(address_parts).title()
+    
+    record = book.find(name)
+    if record:
+        record.add_address(address)
+        if(action =='add-address'):
+            return f"{Fore.GREEN}Address added.{Style.RESET_ALL}"
+        else:
+            return f"{Fore.GREEN}{name}`s address has been changed.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}{name} contact not found.{Style.RESET_ALL}"
+
+
 @input_error
 def delete_address(args: List[str], book: AddressBook) -> str:
     """
@@ -411,85 +414,6 @@ def delete_address(args: List[str], book: AddressBook) -> str:
         return f"{Fore.GREEN}{name}`s address has been deleted.{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
-@input_error
-def change_address(args: List[str], book: AddressBook) -> str:
-    """
-    Change a address from the contact.
-
-    Args:
-        args (List[str]): The arguments for the command.
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: The response message.
-    """
-    if len(args) < 2:
-        raise ValueError("Give me the name of the contact and the new address.")
-    
-    name, *address_parts = args
-    name = name.capitalize()
-    address = " ".join(address_parts).title()
-    record = book.find(name)
-    if record:
-        record.add_address(address)
-        return f"{Fore.GREEN}{name}`s address has been changed.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
-
-def show_contact(args: List[str], book: AddressBook) -> str:
-    """
-    Shows the the specified contact.
-
-    Args:
-        args (List[str]): The arguments for the command.
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: The response message.
-    """
-    if len(args) != 1:
-        raise ValueError("Give me contact name, please.")
-
-    name = args[0].capitalize()
-    record = book.find(name)
-    print(record)
-    if record:
-        table = PrettyTable()
-        table.field_names = ["Name", "Phones", "Birthday", "Email", "Address"]
-
-        phones = ", ".join([str(phone) for phone in record.phones])
-        birthday = record.birthday if record.birthday else "–"
-        email = record.email if record.email else "–"
-        address = record.address if record.address else "–"
-
-        table.add_row([record.name, phones, birthday, email, address])
-        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
-
-
-@input_error
-def show_email(args: List[str], book: AddressBook) -> str:
-    """
-    Shows the email for the specified contact.
-
-    Args:
-        args (List[str]): The arguments for the command.
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: The response message.
-    """
-    if len(args) != 1:
-        raise ValueError("Error: Give me name, please.")
-    
-    name = args[0].capitalize()
-    record = book.find(name)
-    if record:
-        table = PrettyTable()
-        table.field_names = ["Name", "Email"]
-        email = str(record.email) if record.email else "-"
-        table.add_row([name, email])
-        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
 @input_error
 def show_address(args: List[str], book: AddressBook) -> str:
@@ -515,3 +439,27 @@ def show_address(args: List[str], book: AddressBook) -> str:
         table.add_row([name, address])
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+@input_error
+def show_all(book: AddressBook) -> str:
+    """
+    Shows all contacts in the address book.
+
+    Args:
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if not book:
+        return f"{Fore.YELLOW}The address book is empty.{Style.RESET_ALL}"
+
+    table = PrettyTable()
+    table.field_names = ["Name", "Phones", "Birthday", "Email", "Address"]
+    for name, record in book.data.items():
+        phones = ", ".join([str(phone) for phone in record.phones])
+        birthday = str(record.birthday) if record.birthday else "–"
+        email = str(record.email) if record.email else "–"
+        address = str(record.address) if hasattr(record, 'address') and record.address else "–"
+        table.add_row([record.name, phones, birthday, email, address])
+    return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
