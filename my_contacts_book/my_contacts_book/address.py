@@ -1,5 +1,6 @@
 from field import Field
 
+
 class Address(Field):
     """
     Class to represent an address field.
@@ -15,4 +16,5 @@ class Address(Field):
         Args:
             value (str): The address value as a string.
         """
+        super().__init__(value)
         self.value = value

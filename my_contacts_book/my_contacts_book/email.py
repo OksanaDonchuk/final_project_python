@@ -1,6 +1,7 @@
 import re
 from field import Field
 
+
 class Email(Field):
     def __init__(self, email: str):
         """
@@ -24,15 +25,15 @@ class Email(Field):
         """
         if email == '-':
             return email
-        
+
         if len(email) < 3 or len(email) > 150:
             raise ValueError("Email must be between 3 and 150 characters long.")
-        
+
         email_pattern = re.compile(
             r"^[A-Z0-9._%+-]+@(?!.*\.ru)[A-Z0-9.-]+\.[A-Z]{2,4}$", re.IGNORECASE
         )
 
         if not email_pattern.match(email):
             raise ValueError("Invalid email format or contains forbidden domain.")
-        
+
         return email
