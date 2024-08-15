@@ -192,6 +192,51 @@ def add_email(args: List[str], book: AddressBook) -> str:
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
 
 @input_error
+def delete_email(args: List[str], book: AddressBook) -> str:
+    """
+    Deletes an email from the contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) != 1:
+        raise ValueError("Error: Give me name, please.")
+    
+    name = args[0].capitalize()
+    record = book.find(name)
+    if record:
+        record.add_email('-')
+        return f"{Fore.GREEN}{name}`s email has been deleted.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+@input_error
+def change_email(args: List[str], book: AddressBook) -> str:
+    """
+    Change an email from the contact.
+
+    Args:
+        args (List[str]): The arguments for the command.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: The response message.
+    """
+    if len(args) < 2:
+        raise ValueError("Give me the name of the contact and the new email.")
+    
+    name, email = args
+    name = name.capitalize()
+    record = book.find(name)
+    if record:
+        record.add_email(email)
+        return f"{Fore.GREEN}{name}`s email has been changed.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+
+@input_error
 def add_address(args: List[str], book: AddressBook) -> str:
     """
     Adds an address to the specified contact.
@@ -335,7 +380,6 @@ def delete_address(args: List[str], book: AddressBook) -> str:
         record.add_address('–')
         return f"{Fore.GREEN}{name}`s address has been deleted.{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
-
 
 @input_error
 def change_address(args: List[str], book: AddressBook) -> str:
