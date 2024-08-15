@@ -3,9 +3,8 @@ from transliteration import suggest_command, transliterate
 from address_book import AddressBook
 from notes import Notes
 from handlers import (
-    add_contact, change_birthday, change_contact, change_name, delete_contact, show_phone, show_all,
-    add_birthday, show_birthday, show_email, show_address, birthdays, add_email, delete_email, change_email,
-    add_address, delete_address, change_address, show_contact)
+    add_contact, change_contact, change_name, delete_contact, show_phone, show_all,
+    add_birthday, show_birthday, show_email, show_address, birthdays, add_email, delete_email, add_address, delete_address, show_contact)
 from handlers_notes import (add_note, change_note, delete_note, find_note_by_title,
                             find_note_by_tag, show_all_notes)
 
@@ -109,37 +108,37 @@ def handle_action(action: str, args: list[str], book: AddressBook, notes: Notes)
         case "all":
             return show_all(book)
         case "add-birthday":
-            return add_birthday(args, book)
+            return add_birthday(args, book, action)
         case "show-birthday":
             return show_birthday(args, book)
-        case "show_address":
+        case "show-address":
             return show_address(args, book)
         case "birthdays":
             return birthdays(args, book)
         case "change-birthday":
-            return change_birthday(args, book)
+            return add_birthday(args, book, action)
         case "add-email":
-            return add_email(args, book)
-        case "show_email":
+            return add_email(args, book, action)
+        case "show-email":
             return show_email(args, book)
         case "delete-email":
             return delete_email(args, book)
         case "change-email":
-            return change_email(args, book)
+            return add_email(args, book, action)
         case "add-address":
-            return add_address(args, book)
+            return add_address (args, book, action)
         case "delete-address":
             return delete_address(args, book)
         case "change-address":
-            return change_address(args, book)
+            return add_address(args, book, action)
         case "delete":
             return delete_contact(args, book)
         case "add-note":
             return add_note(args, notes)
-        case "change-note":
-            return change_note(args, notes)
-        case "delete-note":
-            return delete_note(args, notes)
+        # case "change-note":
+        #     return change_note(args, notes)
+        # case "delete-note":
+        #     return delete_note(args, notes)
         case "find-note-by-tag":
             return find_note_by_tag(args, notes)
         case "find-note-by-title":
@@ -193,18 +192,18 @@ def print_help() -> str:
     - birthdays: Shows upcoming birthdays within the next 7 days.
     - change-birthday <name> <new_birthday>: Changes the birthday for an existing contact.
     - add-email <name> <email>: Add an email to the specified contact.
-    - show_email <name>:  Shows the email for the specified contact.
+    - show-email <name>:  Shows the email for the specified contact.
     - delete-email <name> <email>: Delete an email to the specified contact.
     - change-email <name> <new email>: Change an email to the specified contact.
     - add-address <name> <address>: Adds an address to the specified contact.
     - delete-address <name>: Delete an address to the specified contact.
     - change-address <name> <new address>: Change an address to the specified contact.
-    - show_address <name>:  Shows the address for the specified contact.
+    - show-address <name>:  Shows the address for the specified contact.
     - delete <name>: Deletes a contact from the address book.
-    - add-note
+    - add-note <title> <note> <tag>: Adds a new note.
     - change-note
     - delete-note
-    - show-all-notes
+    - show-all-notes: Shows all notes with their tags.
     - close / exit / bye: Exits the program.{Style.RESET_ALL}
     """
     return help_message
