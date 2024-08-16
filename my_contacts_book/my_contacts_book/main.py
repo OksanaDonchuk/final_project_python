@@ -43,7 +43,7 @@ def load_data(filename: str = "addressbook.pkl") -> AddressBook:
 
 
 def save_notes(notes: Notes, filename: str = "notes.pkl") -> None:
-    with open(filename, "rb") as file:
+    with open(filename, "wb") as file:
         # data = pickle.load(file)
         # data["notes"] = notes
         with open(filename, "wb") as file:
