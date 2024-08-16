@@ -1,10 +1,13 @@
 import pickle
 from transliteration import suggest_command, transliterate
+from comments import Title, Content
+
 from address_book import AddressBook
 from notes import Notes
 from handlers import (
     add_contact, change_contact, change_name, delete_contact, show_phone, show_all,
-    add_birthday, show_birthday, show_email, show_address, birthdays, add_email, delete_email, add_address, delete_address, show_contact)
+    add_birthday, show_birthday, show_email, show_address, birthdays, add_email, delete_email, add_address,
+    delete_address, show_contact)
 from handlers_notes import (add_note, change_note, delete_note, find_note_by_title,
                             find_note_by_tag, show_all_notes)
 
@@ -53,8 +56,11 @@ def save_notes(notes: Notes, filename: str = "notes.pkl") -> None:
 def load_notes(filename: str = "notes.pkl") -> Notes:
     try:
         with open(filename, "rb") as file:
-            return pickle.load(file)
-            # return data.get("notes", Notes())
+            notes = pickle.load(file)
+            for note in notes.notes:
+                if isinstance(note.content, str):
+                    note.content = Content(note.content)
+            return notes
     except FileNotFoundError:
         return Notes()
 
@@ -126,7 +132,7 @@ def handle_action(action: str, args: list[str], book: AddressBook, notes: Notes)
         case "change-email":
             return add_email(args, book, action)
         case "add-address":
-            return add_address (args, book, action)
+            return add_address(args, book, action)
         case "delete-address":
             return delete_address(args, book)
         case "change-address":
@@ -135,10 +141,10 @@ def handle_action(action: str, args: list[str], book: AddressBook, notes: Notes)
             return delete_contact(args, book)
         case "add-note":
             return add_note(args, notes)
-        # case "change-note":
-        #     return change_note(args, notes)
-        # case "delete-note":
-        #     return delete_note(args, notes)
+        case "change-note":
+            return change_note(args, notes)
+        case "delete-note":
+            return delete_note(args, notes)
         case "find-note-by-tag":
             return find_note_by_tag(args, notes)
         case "find-note-by-title":

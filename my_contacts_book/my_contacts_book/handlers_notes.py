@@ -5,6 +5,7 @@ from address_book import AddressBook
 from birthday import Birthday
 from email import Email
 from notes import Notes
+from comments import Content
 from colorama import Fore, Style
 
 
@@ -48,7 +49,7 @@ def add_note(args: List[str], notes: Notes) -> str:
 
 
 @input_error
-def delete_note(notes: Notes):
+def delete_note(args: list[str], notes: Notes) -> str:
     title = input("Enter a title: ")
     note = notes.find_note_by_title(title)
     if note:
@@ -62,23 +63,21 @@ def delete_note(notes: Notes):
 
 
 @input_error
-def change_note(notes: Notes):
+def change_note(args: list[str], notes: Notes) -> str:
     title = input("Enter a title: ")
+    note = notes.find_note_by_title(title)
+    if not note:
+        return f"Note with title '{title}' not found."
+
     new_content = input("Enter new content: ")
     new_tags = input("Enter new tags: ")
 
-    note = notes.find_note_by_title(title)
+    if new_content:
+        note.content = Content(new_content)
+    if new_tags:
+        note.tags = [tag.strip() for tag in new_tags.split(",")]
 
-    if note:
-        if new_content:
-            note.content = new_content
-
-        if new_tags:
-            note.tags = [tag.strip() for tag in new_tags.split(",")]
-
-        return f"Note with title '{title}' successfully edited."
-    else:
-        return f"Note with title '{title}' not found."
+    return f"Note with title '{title}' successfully edited."
 
 
 @input_error
@@ -111,4 +110,7 @@ def find_note_by_tag(args: list[str], notes: Notes) -> str:
 
 @input_error
 def show_all_notes(notes: Notes):
+    # return notes.show_all_notes()
+    for note in notes.notes:
+        print(f"Debug: {type(note.title)}, {type(note.content)}")  # Вывод типа данных
     return notes.show_all_notes()
