@@ -6,24 +6,21 @@ class Note:
         if not title:
             raise ValueError("Title cannot be empty.")
         self.title = Title(title)
-        self.content = Content(content) if content else Content("")
+
+        if isinstance(content, str):
+            self.content = Content(content)
+        elif isinstance(content, Content):
+            self.content = content
+        else:
+            self.content = Content("")
         self.tags = tags if tags else []
 
     def __str__(self) -> str:
-
         title_str = f"Title: {self.title.value}"
         content_str = f"Content: {self.content.value}" if self.content.value else ""
         tags_str = f"Tags: {', '.join(self.tags)}" if self.tags else ""
         return "\n".join(filter(None, [title_str, content_str, tags_str]))
 
-    # def add_tags(self, note, new_tags):
-    #     if not new_tags:
-    #         return
-    #     note.tags = [str(tag).strip() for tag in note.tags.split(",")]
-    #     for tag in new_tags.split(","):
-    #         if tag not in note.tags:
-    #             note.tags.append(tag)
-    #     return f"Tags added to note with title: '{note.title.value}'."
     def add_tags(self, new_tags: str) -> str:
         if not new_tags:
             return "No tags provided."
@@ -34,12 +31,12 @@ class Note:
 
 class Notes:
     def __init__(self):
-        self.notes = []
+        self.notes = None
 
     def add_note(self, title: str, content: str = None, tags: str = None) -> str:
         if self.find_note_by_title(title):
             return f"Note with title: '{title}' already exists."
-        note = Note(title, content, tags.split(",") if tags else [])
+        note = Note(title, Content(content), tags.split(",") if tags else [])
         self.notes.append(note)
         return f"Note with title: '{title}' successfully added."
 
@@ -82,3 +79,4 @@ class Notes:
         divider_str = "*" * 40
         notes_str = "\n\n".join(f"{divider_str}\n{note}\n{divider_str}" for note in self.notes)
         return notes_str
+
