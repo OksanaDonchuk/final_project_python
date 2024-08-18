@@ -33,7 +33,7 @@ def input_error(func):
 @input_error
 def add_note(args: list[str], book: AddressBook) -> str:
     if len(args) != 2:
-        return "Error: Provide the contact name and the note title."
+        raise ValueError("Provide the contact name and the note title.")
 
     name, title_value = args
     record = book.find(name.capitalize())
@@ -171,6 +171,54 @@ def show_all_notes_sorted_by_tag(book: AddressBook) -> str:
         table.add_row([name, title, text, tag])
 
     return f"All contacts with notes (sorted by tag):\n{table}"
+
+@input_error
+def find_note_by_title(args: list[str], book: AddressBook) -> str:
+    if len(args) != 1:
+       raise ValueError("Provide the title of the note to search.")
+
+    title_value = args[0].capitalize()  
+    table = PrettyTable()
+    table.field_names = ["Name", "Title", "Text", "Tag"]
+
+    found_notes = []
+
+    for record in book.values():
+        for note in record.notes:
+            if note.title.value == title_value:
+                found_notes.append((record.name.value, note.title.value, note.text.value, note.tag.value))
+
+    if not found_notes:
+        return f"No notes found with Title '{title_value}'."
+
+    for name, title, text, tag in found_notes:
+        table.add_row([name, title, text, tag])
+
+    return f"Notes with Title '{title_value}':\n{table}"
+
+@input_error
+def find_note_by_tag(args: list[str], book: AddressBook) -> str:
+    if len(args) != 1:
+        raise ValueError("Provide the tag of the note to search.")
+
+    tag_value = args[0].lower()
+    table = PrettyTable()
+    table.field_names = ["Name", "Title", "Text", "Tag"]
+
+    found_notes = []
+
+    for record in book.values():
+        for note in record.notes:
+            if note.tag.value.lower() == tag_value:
+                found_notes.append((record.name.value, note.title.value, note.text.value, note.tag.value))
+
+    if not found_notes:
+        return f"No notes found with Tag '{tag_value}'."
+
+    for name, title, text, tag in found_notes:
+        table.add_row([name, title, text, tag])
+
+    return f"Notes with Tag '{tag_value}':\n{table}"
 
 @input_error
 def add_contact(args: List[str], book: AddressBook) -> str:

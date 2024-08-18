@@ -4,7 +4,7 @@ from transliteration import suggest_command, transliterate
 from address_book import AddressBook
 from note import Note
 from handlers import (
-    add_contact, change_contact, change_name, delete_contact, show_notes, show_phone, show_all,
+    add_contact, change_contact, change_name, delete_contact, find_note_by_tag, find_note_by_title, show_notes, show_phone, show_all,
     add_birthday, show_birthday, show_email, show_address, birthdays, add_email, delete_email, add_address,
     delete_address, show_contact, add_note, change_note, delete_note, show_all_notes, show_all_notes_sorted_by_tag)
 
@@ -146,10 +146,10 @@ def handle_action(action: str, args: list[str], book: AddressBook) -> str:
             return show_all_notes(book)
         case "show-all-notes-sorted-by-tag":
             return show_all_notes_sorted_by_tag(book)
-        # case "find-note-by-tag":
-        #     return find_note_by_tag(args, book)
-        # case "find-note-by-title":
-        #     return find_note_by_title(args, book)
+        case "find-note-by-tag":
+            return find_note_by_tag(args, book)
+        case "find-note-by-title":
+            return find_note_by_title(args, book)
         case "show-notes":
             return show_notes(args, book)
         case "help":
@@ -208,11 +208,13 @@ def print_help() -> str:
     - show-address <name>:  Shows the address for the specified contact.
     - delete <name>: Deletes a contact from the address book.
     - add-note <name> <title>: Adds a new note.
-    - change-note <name>: Changes the note for the specified contact
-    - delete-note 
-    - show-notes: Shows the notes for the specified contact
-    - show-all-notes: Shows all notes with their tags
-    - show-all-notes-sorted-by-tag: Shows all notes sorted by their tags
+    - change-note <name> <title>: Changes the note for the specified contact.
+    - delete-note <name> <title>: Delete the note for the specified contact.
+    - show-notes <name>: Shows the notes for the specified contact.
+    - show-all-notes: Shows all notes with their tags.
+    - show-all-notes-sorted-by-tag: Shows all notes sorted by their tags.
+    - find-note-by-title <title. Finds a notes by tytle.
+    - find-note-by-tag <tag. Finds a notes by tag.
     - close / exit / bye: Exits the program.{Style.RESET_ALL}
     """
     return help_message
@@ -234,12 +236,14 @@ def main() -> None:
 
             action, args = parse_input(user_input)
 
-            COMMANDS = ["hello", "add", "change-name", "change", "phone", "all", "add-birthday", "show-birthday",
-                        "birthdays", "change-birthday", "show_email", "show_address", "add-email", "delete-email",
-                        "change-email", "add-address", "delete-address", "change-address", "delete", "add-note",
-                        "change-note", "delete-note", "show-notes", "show-all-notes", "show-all-noted-sorted-by-tag", "find-note-by-title", "find-note-by-tag",
-                        "help",
-                        "close", "exit", "bye", "contact"]
+            COMMANDS = ["hello", "add", "change-name", "change", "phone", "contact", "delete",
+                        "add-birthday", "change-birthday", "show-birthday", "birthdays",
+                        "add-email", "change-email", "show-email", "delete-email",
+                        "show-address", "add-address", "change-address", "delete-address",
+                        "add-note", "change-note", "show-notes", "delete-note",
+                        "show-all-notes", "show-all-notes-sorted-by-tag", "find-note-by-title", "find-note-by-tag",
+                        "find-note-by-title", "find-note-by-tag",
+                        "all", "help", "close", "exit", "bye"]
 
             suggested_command = suggest_command(action, COMMANDS)
 
