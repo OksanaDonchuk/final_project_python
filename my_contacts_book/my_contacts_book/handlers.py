@@ -87,6 +87,37 @@ def show_notes(args: list[str], book: AddressBook) -> str:
 
     return f"Notes for contact {name}:\n{table}"
 
+
+@input_error
+def change_note(args: list[str], book: AddressBook) -> str:
+    if len(args) != 2:
+        raise ValueError("Provide the contact name and the note title.")
+
+    name, title_value = args
+    record = book.find(name.capitalize())
+
+    if not record:
+        return f"Error: Contact {name} not found."
+
+    note_to_edit = None
+    for note in record.notes:
+        if note.title.value == title_value:
+            note_to_edit = note
+            break
+
+    if not note_to_edit:
+        return f"Error: Note with title '{title_value}' not found for {name}."
+
+    new_text = input("Enter the new text of the note (leave empty to keep current): ").strip()
+    new_tag = input("Enter the new tag for the note (leave empty to keep current): ").strip()
+
+    if new_text:
+        note_to_edit.text = Field(new_text)
+    if new_tag:
+        note_to_edit.tag = Field(new_tag)
+
+    return f"Note '{title_value}' has been updated for {name}."
+
 @input_error
 def add_contact(args: List[str], book: AddressBook) -> str:
     """
