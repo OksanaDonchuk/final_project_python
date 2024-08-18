@@ -1,14 +1,15 @@
-class Note(Field):
+from field import Field
+class Note:
     """
-    Class to represent a note field.
+    Class to represent a note.
 
     Attributes:
-        title (str): The title of the note.
-        text (str): The text content of the note.
-        tag (str): The tag associated with the note.
+        title (Field): The title of the note.
+        text (Field): The text content of the note.
+        tag (Field): The tag associated with the note.
     """
 
-    def __init__(self, title: str, text: str, tag: str):
+    def __init__(self, title: str, text: str, tag: str) -> None:
         """
         Initializes a Note instance.
 
@@ -17,11 +18,15 @@ class Note(Field):
             text (str): The text content of the note.
             tag (str): The tag associated with the note.
         """
-        super().__init__(title)
-        self.title = title
-        self.text = text
-        self.tag = tag
+        self.title = Field(title)
+        self.text = Field(text)
+        self.tag = Field(tag)
 
+    def __str__(self) -> str:
+        """
+        Returns a string representation of the note.
 
-    def __str__(self):
-        return f"Note(title='{self.title}', text='{self.text}', tag='{self.tag}')"
+        Returns:
+            str: The string representation of the note.
+        """
+        return f"Title: {self.title}, Text: {self.text}, Tag: {self.tag}"

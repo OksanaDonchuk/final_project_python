@@ -16,9 +16,10 @@ class Record:
         birthday (Optional[Birthday]): The birthday of the contact.
         email (Optional[Email]): The email address of the contact.
         address (Optional[Address]): The address of the contact.
+        notes (Optional[List[Note]]): The optional list of notes associated with the contact.
     """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         """
         Initializes a Record instance.
 
@@ -30,7 +31,7 @@ class Record:
         self.birthday: Optional[Birthday] = None
         self.email: Optional[Email] = None
         self.address: Optional[Address] = None
-        self.notes: List[Note] = []
+        self.notes: Optional[List[Note]] = []
 
     def add_note(self, note: Note) -> None:
             self.notes.append(note)

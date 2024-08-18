@@ -48,6 +48,38 @@ def add_note(args: list[str], book: AddressBook) -> str:
 
     return f"Note '{title_value}' added to {name}'s record."
 
+@input_error
+def show_notes(args: list[str], book: AddressBook) -> str:
+    """
+    Show all notes associated with a contact.
+
+    Args:
+        args (list[str]): The arguments for the command. Expected to be the contact's name.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: A string representation of the notes for the contact or an error message.
+    """
+    if len(args) != 1:
+        return "Error: Provide the contact name."
+
+    name = args[0].capitalize()
+    record = book.find(name)
+
+    if not record:
+        return f"Error: Contact {name} not found."
+
+    if not record.notes:
+        return f"Contact {name} has no notes."
+
+    table = PrettyTable()
+    table.field_names = ["Title", "Text", "Tag"]
+
+    for note in record.notes:
+        table.add_row([note.title, note.text, note.tag])
+
+    return f"Notes for contact {name}:\n{table}"
+
 
 @input_error
 def add_contact(args: List[str], book: AddressBook) -> str:
