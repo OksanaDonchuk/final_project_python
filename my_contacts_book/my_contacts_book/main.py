@@ -6,7 +6,7 @@ from note import Note
 from handlers import (
     add_contact, change_contact, change_name, delete_contact, show_notes, show_phone, show_all,
     add_birthday, show_birthday, show_email, show_address, birthdays, add_email, delete_email, add_address,
-    delete_address, show_contact, add_note)
+    delete_address, show_contact, add_note, change_note)
 
 from colorama import init, Fore, Style
 
@@ -138,8 +138,8 @@ def handle_action(action: str, args: list[str], book: AddressBook) -> str:
             return delete_contact(args, book)
         case "add-note":
             return add_note(args, book)
-        # case "change-note":
-        #     return change_note(args, book)
+        case "change-note":
+            return change_note(args, book)
         # case "delete-note":
         #     return delete_note(args, book)
         # case "find-note-by-tag":
