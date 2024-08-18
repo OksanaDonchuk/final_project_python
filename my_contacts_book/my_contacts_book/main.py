@@ -204,7 +204,7 @@ def print_help() -> str:
     - show-address <name>:  Shows the address for the specified contact.
     - delete <name>: Deletes a contact from the address book.
     - add-note <name> <title>: Adds a new note.
-    - change-note
+    - change-note <name>: Changes the note for the specified contact
     - delete-note
     - show-notes: Shows the notes for the specified contact
     - show-all-notes: Shows all notes with their tags.

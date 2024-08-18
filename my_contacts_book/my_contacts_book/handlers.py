@@ -7,6 +7,7 @@ from email import Email
 from note import Note
 from colorama import Fore, Style
 from prettytable import PrettyTable
+from field import Field
 
 
 def input_error(func):
@@ -40,6 +41,12 @@ def add_note(args: list[str], book: AddressBook) -> str:
     if not record:
         return f"Error: Contact {name} not found."
 
+    title_value = title_value.capitalize()
+
+    for note in record.notes:
+        if note.title.value == title_value:
+            return f"Error: Note with title '{title_value}' already exists for {name}."
+
     text_value = input("Enter the text of the note: ").strip()
     tag_value = input("Enter the tag for the note: ").strip()
 
@@ -61,7 +68,7 @@ def show_notes(args: list[str], book: AddressBook) -> str:
         str: A string representation of the notes for the contact or an error message.
     """
     if len(args) != 1:
-        return "Error: Provide the contact name."
+        raise ValueError("Provide the contact name.")
 
     name = args[0].capitalize()
     record = book.find(name)
@@ -79,7 +86,6 @@ def show_notes(args: list[str], book: AddressBook) -> str:
         table.add_row([note.title, note.text, note.tag])
 
     return f"Notes for contact {name}:\n{table}"
-
 
 @input_error
 def add_contact(args: List[str], book: AddressBook) -> str:
