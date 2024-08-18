@@ -112,6 +112,44 @@ def change_note(args: list[str], book: AddressBook) -> str:
     return f"Error: Note with title '{title_value}' not found for {name}."
 
 @input_error
+def delete_note(args: list[str], book: AddressBook) -> str:
+    if len(args) != 2:
+        raise ValueError("Provide the contact name and the note title.")
+
+    name, title_value = args
+    record = book.find(name.capitalize())
+
+    if not record:
+        return f"Error: Contact {name} not found."
+
+    title_value = title_value.capitalize()  
+
+    for note in record.notes:
+        if note.title.value == title_value:
+            record.notes.remove(note)
+            return f"Note '{title_value}' has been deleted from {name}'s record."
+
+    return f"Error: Note with title '{title_value}' not found for {name}."
+
+@input_error
+def show_all_notes(book: AddressBook) -> str:
+    table = PrettyTable()
+    table.field_names = ["Name", "Title", "Text", "Tag"]
+
+    notes_found = False
+
+    for record in book.values():
+        if record.notes: 
+            for note in record.notes:
+                table.add_row([record.name.value, note.title.value, note.text.value, note.tag.value])
+            notes_found = True
+
+    if notes_found:
+        return f"All contacts with notes:\n{table}"
+    else:
+        return "No contacts with notes found."
+
+@input_error
 def add_contact(args: List[str], book: AddressBook) -> str:
     """
     Adds a contact to the address book.

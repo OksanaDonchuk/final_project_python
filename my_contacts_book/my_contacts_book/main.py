@@ -6,7 +6,7 @@ from note import Note
 from handlers import (
     add_contact, change_contact, change_name, delete_contact, show_notes, show_phone, show_all,
     add_birthday, show_birthday, show_email, show_address, birthdays, add_email, delete_email, add_address,
-    delete_address, show_contact, add_note, change_note)
+    delete_address, show_contact, add_note, change_note, delete_note, show_all_notes)
 
 from colorama import init, Fore, Style
 
@@ -140,8 +140,10 @@ def handle_action(action: str, args: list[str], book: AddressBook) -> str:
             return add_note(args, book)
         case "change-note":
             return change_note(args, book)
-        # case "delete-note":
-        #     return delete_note(args, book)
+        case "delete-note":
+            return delete_note(args, book)
+        case "show-all-notes":
+            return show_all_notes(book)
         # case "find-note-by-tag":
         #     return find_note_by_tag(args, book)
         # case "find-note-by-title":
@@ -205,7 +207,7 @@ def print_help() -> str:
     - delete <name>: Deletes a contact from the address book.
     - add-note <name> <title>: Adds a new note.
     - change-note <name>: Changes the note for the specified contact
-    - delete-note
+    - delete-note 
     - show-notes: Shows the notes for the specified contact
     - show-all-notes: Shows all notes with their tags.
     - close / exit / bye: Exits the program.{Style.RESET_ALL}
@@ -232,7 +234,7 @@ def main() -> None:
             COMMANDS = ["hello", "add", "change-name", "change", "phone", "all", "add-birthday", "show-birthday",
                         "birthdays", "change-birthday", "show_email", "show_address", "add-email", "delete-email",
                         "change-email", "add-address", "delete-address", "change-address", "delete", "add-note",
-                        "change-note", "delete-note", "show-notes", "find-note-by-title", "find-note-by-tag",
+                        "change-note", "delete-note", "show-notes", "show-all-notes", "find-note-by-title", "find-note-by-tag",
                         "help",
                         "close", "exit", "bye", "contact"]
 
