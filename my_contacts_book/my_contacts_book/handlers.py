@@ -99,24 +99,17 @@ def change_note(args: list[str], book: AddressBook) -> str:
     if not record:
         return f"Error: Contact {name} not found."
 
-    note_to_edit = None
+    title_value = title_value.capitalize()  
+
     for note in record.notes:
         if note.title.value == title_value:
-            note_to_edit = note
-            break
+            new_text = input("Enter the new text for the note: ").strip()
+            new_tag = input("Enter the new tag for the note: ").strip()
+            note.text.value = new_text
+            note.tag.value = new_tag
+            return f"Note '{title_value}' has been updated for {name}."
 
-    if not note_to_edit:
-        return f"Error: Note with title '{title_value}' not found for {name}."
-
-    new_text = input("Enter the new text of the note (leave empty to keep current): ").strip()
-    new_tag = input("Enter the new tag for the note (leave empty to keep current): ").strip()
-
-    if new_text:
-        note_to_edit.text = Field(new_text)
-    if new_tag:
-        note_to_edit.tag = Field(new_tag)
-
-    return f"Note '{title_value}' has been updated for {name}."
+    return f"Error: Note with title '{title_value}' not found for {name}."
 
 @input_error
 def add_contact(args: List[str], book: AddressBook) -> str:
