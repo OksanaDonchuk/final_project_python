@@ -1,15 +1,12 @@
 import pickle
 from transliteration import suggest_command, transliterate
-from comments import Title, Content
 
 from address_book import AddressBook
-from notes import Notes
+from note import Note
 from handlers import (
-    add_contact, change_contact, change_name, delete_contact, show_phone, show_all,
+    add_contact, change_contact, change_name, delete_contact, show_notes, show_phone, show_all,
     add_birthday, show_birthday, show_email, show_address, birthdays, add_email, delete_email, add_address,
     delete_address, show_contact, add_note)
-from handlers_notes import (change_note, delete_note, find_note_by_title,
-                            find_note_by_tag, show_all_notes)
 
 from colorama import init, Fore, Style
 
@@ -85,7 +82,7 @@ def print_message(message: str, is_error: bool = False) -> None:
         print(Fore.GREEN + message + Style.RESET_ALL)
 
 
-def handle_action(action: str, args: list[str], book: AddressBook, notes: Notes) -> str:
+def handle_action(action: str, args: list[str], book: AddressBook) -> str:
     """
     Handles the action by calling the appropriate function using match...case.
 
@@ -141,16 +138,16 @@ def handle_action(action: str, args: list[str], book: AddressBook, notes: Notes)
             return delete_contact(args, book)
         case "add-note":
             return add_note(args, book)
-        case "change-note":
-            return change_note(args, book)
-        case "delete-note":
-            return delete_note(args, book)
-        case "find-note-by-tag":
-            return find_note_by_tag(args, book)
-        case "find-note-by-title":
-            return find_note_by_title(args, book)
-        case "show-all-notes":
-            return show_all_notes(book)
+        # case "change-note":
+        #     return change_note(args, book)
+        # case "delete-note":
+        #     return delete_note(args, book)
+        # case "find-note-by-tag":
+        #     return find_note_by_tag(args, book)
+        # case "find-note-by-title":
+        #     return find_note_by_title(args, book)
+        case "show-notes":
+            return show_notes(args, book)
         case "help":
             return print_help()
         case "close" | "exit" | "bye":
@@ -209,6 +206,7 @@ def print_help() -> str:
     - add-note <name> <title>: Adds a new note.
     - change-note
     - delete-note
+    - show-notes: Shows the notes for the specified contact
     - show-all-notes: Shows all notes with their tags.
     - close / exit / bye: Exits the program.{Style.RESET_ALL}
     """
@@ -220,7 +218,7 @@ def main() -> None:
     Main function to run the assistant bot.
     """
     book = load_data()
-    notes = load_notes()
+    
     print(f"{Fore.BLUE}Welcome to the assistant bot!{Style.RESET_ALL}")
     print(print_help())
     try:
@@ -234,7 +232,7 @@ def main() -> None:
             COMMANDS = ["hello", "add", "change-name", "change", "phone", "all", "add-birthday", "show-birthday",
                         "birthdays", "change-birthday", "show_email", "show_address", "add-email", "delete-email",
                         "change-email", "add-address", "delete-address", "change-address", "delete", "add-note",
-                        "change-note", "delete-note", "show-all-notes", "find-note-by-title", "find-note-by-tag",
+                        "change-note", "delete-note", "show-notes", "find-note-by-title", "find-note-by-tag",
                         "help",
                         "close", "exit", "bye", "contact"]
 
@@ -245,15 +243,15 @@ def main() -> None:
                 if confirm == 'y':
                     action = suggested_command
 
-            response = handle_action(action, args, book, notes)
+            response = handle_action(action, args, book)
             print(response)
             if action in ["close", "exit", "bye"]:
                 save_data(book)
-                save_notes(notes)
+                
                 break
     except KeyboardInterrupt:
         print("\nProgram stopped. Exiting...")
-        save_notes(notes)
+        
         save_data(book)
 
 
