@@ -4,6 +4,7 @@ from phone import Phone
 from birthday import Birthday
 from email import Email
 from address import Address
+from note import Note
 
 class Record:
     """
@@ -29,6 +30,10 @@ class Record:
         self.birthday: Optional[Birthday] = None
         self.email: Optional[Email] = None
         self.address: Optional[Address] = None
+        self.notes: List[Note] = []
+
+    def add_note(self, note: Note) -> None:
+            self.notes.append(note)
 
     def add_phone(self, phone: str) -> None:
         """
@@ -113,4 +118,6 @@ class Record:
         birthday = f", Birthday: {self.birthday}" if self.birthday else ""
         address = f", Address: {self.address}" if self.address else ""
         email = f", Email: {self.email}" if self.email else ""
-        return f"Name: {self.name}, Phones: {phones}{birthday}{email}{address}"
+        notes = ", ".join([str(note) for note in self.notes])
+        notes_str = f", Notes: {notes}" if notes else ""
+        return f"Name: {self.name}, Phones: {phones}{birthday}{email}{address}{notes_str}"
