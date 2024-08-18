@@ -148,6 +148,29 @@ def show_all_notes(book: AddressBook) -> str:
         return f"All contacts with notes:\n{table}"
     else:
         return "No contacts with notes found."
+    
+@input_error
+def show_all_notes_sorted_by_tag(book: AddressBook) -> str:
+    table = PrettyTable()
+    table.field_names = ["Name", "Title", "Text", "Tag"]
+
+    notes_list = []
+
+    for record in book.values():
+        if record.notes:  
+            for note in record.notes:
+                notes_list.append((record.name.value, note.title.value, note.text.value, note.tag.value))
+
+    if not notes_list:
+        return "No contacts with notes found."
+ 
+    notes_list.sort(key=lambda x: x[3].lower())  
+
+    
+    for name, title, text, tag in notes_list:
+        table.add_row([name, title, text, tag])
+
+    return f"All contacts with notes (sorted by tag):\n{table}"
 
 @input_error
 def add_contact(args: List[str], book: AddressBook) -> str:
