@@ -7,8 +7,8 @@ from notes import Notes
 from handlers import (
     add_contact, change_contact, change_name, delete_contact, show_phone, show_all,
     add_birthday, show_birthday, show_email, show_address, birthdays, add_email, delete_email, add_address,
-    delete_address, show_contact)
-from handlers_notes import (add_note, change_note, delete_note, find_note_by_title,
+    delete_address, show_contact, add_note)
+from handlers_notes import (change_note, delete_note, find_note_by_title,
                             find_note_by_tag, show_all_notes)
 
 from colorama import init, Fore, Style
@@ -45,24 +45,24 @@ def load_data(filename: str = "addressbook.pkl") -> AddressBook:
         return AddressBook()
 
 
-def save_notes(notes: Notes, filename: str = "notes.pkl") -> None:
-    with open(filename, "wb") as file:
-        # data = pickle.load(file)
-        # data["notes"] = notes
-        with open(filename, "wb") as file:
-            pickle.dump(notes, file)
-
-
-def load_notes(filename: str = "notes.pkl") -> Notes:
-    try:
-        with open(filename, "rb") as file:
-            notes = pickle.load(file)
-            for note in notes.notes:
-                if isinstance(note.content, str):
-                    note.content = Content(note.content)
-            return notes
-    except FileNotFoundError:
-        return Notes()
+# def save_notes(notes: Notes, filename: str = "notes.pkl") -> None:
+#     with open(filename, "wb") as file:
+#         # data = pickle.load(file)
+#         # data["notes"] = notes
+#         with open(filename, "wb") as file:
+#             pickle.dump(notes, file)
+#
+#
+# def load_notes(filename: str = "notes.pkl") -> Notes:
+#     try:
+#         with open(filename, "rb") as file:
+#             notes = pickle.load(file)
+#             for note in notes.notes:
+#                 if isinstance(note.content, str):
+#                     note.content = Content(note.content)
+#             return notes
+#     except FileNotFoundError:
+#         return Notes()
 
 
 # def sort_by_tag(self, tag: str) -> list:
@@ -140,17 +140,17 @@ def handle_action(action: str, args: list[str], book: AddressBook, notes: Notes)
         case "delete":
             return delete_contact(args, book)
         case "add-note":
-            return add_note(args, notes)
+            return add_note(args, book)
         case "change-note":
-            return change_note(args, notes)
+            return change_note(args, book)
         case "delete-note":
-            return delete_note(args, notes)
+            return delete_note(args, book)
         case "find-note-by-tag":
-            return find_note_by_tag(args, notes)
+            return find_note_by_tag(args, book)
         case "find-note-by-title":
-            return find_note_by_title(args, notes)
+            return find_note_by_title(args, book)
         case "show-all-notes":
-            return show_all_notes(notes)
+            return show_all_notes(book)
         case "help":
             return print_help()
         case "close" | "exit" | "bye":
@@ -206,7 +206,7 @@ def print_help() -> str:
     - change-address <name> <new address>: Change an address to the specified contact.
     - show-address <name>:  Shows the address for the specified contact.
     - delete <name>: Deletes a contact from the address book.
-    - add-note <title> <note> <tag>: Adds a new note.
+    - add-note <name> <title>: Adds a new note.
     - change-note
     - delete-note
     - show-all-notes: Shows all notes with their tags.

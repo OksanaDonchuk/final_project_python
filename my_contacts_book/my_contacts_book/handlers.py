@@ -4,7 +4,7 @@ from address_book import AddressBook
 from birthday import Birthday
 from record import Record
 from email import Email
-from notes import Notes
+from note import Note
 from colorama import Fore, Style
 from prettytable import PrettyTable
 
@@ -28,6 +28,25 @@ def input_error(func):
             return f"{Fore.YELLOW}Error: {str(e)}{Style.RESET_ALL}"
 
     return inner
+
+@input_error
+def add_note(args: list[str], book: AddressBook) -> str:
+    if len(args) != 2:
+        return "Error: Provide the contact name and the note title."
+
+    name, title_value = args
+    record = book.find(name.capitalize())
+
+    if not record:
+        return f"Error: Contact {name} not found."
+
+    text_value = input("Enter the text of the note: ").strip()
+    tag_value = input("Enter the tag for the note: ").strip()
+
+    note = Note(title_value, text_value, tag_value)
+    record.add_note(note)
+
+    return f"Note '{title_value}' added to {name}'s record."
 
 
 @input_error
