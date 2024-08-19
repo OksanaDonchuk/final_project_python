@@ -131,7 +131,7 @@ def show_contact(args: List[str], book: AddressBook) -> str:
         address = record.address if record.address else "–"
 
         table.add_row([record.name, phones, birthday, email, address])
-        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+        return f"{Fore.GREEN}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
@@ -211,7 +211,7 @@ def show_phone(args: List[str], book: AddressBook) -> str:
         table.field_names = ["Name", "Phones"]
         phones = ", ".join([str(phone) for phone in record.phones])
         table.add_row([name, phones])
-        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+        return f"{Fore.GREEN}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
@@ -264,7 +264,7 @@ def show_birthday(args: List[str], book: AddressBook) -> str:
         table.field_names = ["Name", "Birthday"]
         birthday = str(record.birthday) if record.birthday else "No birthday set"
         table.add_row([name, birthday])
-        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+        return f"{Fore.GREEN}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
@@ -288,7 +288,7 @@ def birthdays(args: List[str], book: AddressBook) -> str:
     for record in upcoming_birthdays:
         phones = ", ".join([str(phone) for phone in record.phones])
         table.add_row([record.name, record.birthday, phones])
-    return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+    return f"{Fore.GREEN}{table}{Style.RESET_ALL}"
 
 
 @input_error
@@ -363,7 +363,7 @@ def show_email(args: List[str], book: AddressBook) -> str:
         table.field_names = ["Name", "Email"]
         email = str(record.email) if record.email else "-"
         table.add_row([name, email])
-        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+        return f"{Fore.GREEN}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}CContact {name} not found.{Style.RESET_ALL}"
 
 
@@ -441,7 +441,7 @@ def show_address(args: List[str], book: AddressBook) -> str:
         table.field_names = ["Name", "Address"]
         address = str(record.address) if record.address else "-"
         table.add_row([name, address])
-        return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+        return f"{Fore.GREEN}{table}{Style.RESET_ALL}"
     return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 @input_error
@@ -480,7 +480,7 @@ def add_note(args: list[str], book: AddressBook) -> str:
     note = Note(title_value, text_value, tag_value)
     record.add_note(note)
 
-    return f"{Fore.BLUE}Note '{title_value}' added to {name}'s record.{Style.RESET_ALL}"
+    return f"{Fore.GREEN}Note '{title_value}' added to {name}'s record.{Style.RESET_ALL}"
 
 @input_error
 def show_notes(args: list[str], book: AddressBook) -> str:
@@ -512,7 +512,7 @@ def show_notes(args: list[str], book: AddressBook) -> str:
     for note in record.notes:
         table.add_row([note.title, note.text, note.tag])
 
-    return f"{Fore.BLUE}Notes for contact {name}:\n{table}{Style.RESET_ALL}"
+    return f"{Fore.GREEN}Notes for contact {name}:\n{table}{Style.RESET_ALL}"
 
 
 @input_error
@@ -547,7 +547,7 @@ def change_note(args: list[str], book: AddressBook) -> str:
             new_tag = input("Enter the new tag for the note: ").strip()
             note.text.value = new_text
             note.tag.value = new_tag
-            return f"{Fore.BLUE}Note '{title_value}' has been updated for {name}.{Style.RESET_ALL}"
+            return f"{Fore.GREEN}Note '{title_value}' has been updated for {name}.{Style.RESET_ALL}"
 
     return f"{Fore.YELLOW}Error: Note with title '{title_value}' not found for {name}.{Style.RESET_ALL}"
 
@@ -580,7 +580,7 @@ def delete_note(args: list[str], book: AddressBook) -> str:
     for note in record.notes:
         if note.title.value == title_value:
             record.notes.remove(note)
-            return f"{Fore.BLUE}Note '{title_value}' has been deleted from {name}'s record.{Style.RESET_ALL}"
+            return f"{Fore.GREEN}Note '{title_value}' has been deleted from {name}'s record.{Style.RESET_ALL}"
 
     return f"{Fore.YELLOW}Error: Note with title '{title_value}' not found for {name}.{Style.RESET_ALL}"
 
@@ -607,7 +607,7 @@ def show_all_notes(book: AddressBook) -> str:
             notes_found = True
 
     if notes_found:
-        return f"{Fore.BLUE}All contacts with notes:\n{table}{Style.RESET_ALL}"
+        return f"{Fore.GREEN}All contacts with notes:\n{table}{Style.RESET_ALL}"
     else:
         return f"{Fore.YELLOW}No contacts with notes found.{Style.RESET_ALL}"
     
@@ -641,7 +641,7 @@ def show_all_notes_sorted_by_tag(book: AddressBook) -> str:
     for name, title, text, tag in notes_list:
         table.add_row([name, title, text, tag])
 
-    return f"{Fore.BLUE}All contacts with notes (sorted by tag):\n{table}{Style.RESET_ALL}"
+    return f"{Fore.GREEN}All contacts with notes (sorted by tag):\n{table}{Style.RESET_ALL}"
 
 @input_error
 def find_note_by_title(args: list[str], book: AddressBook) -> str:
@@ -678,7 +678,7 @@ def find_note_by_title(args: list[str], book: AddressBook) -> str:
     for name, title, text, tag in found_notes:
         table.add_row([name, title, text, tag])
 
-    return f"{Fore.BLUE}Notes with Title '{title_value}':\n{table}{Style.RESET_ALL}"
+    return f"{Fore.GREEN}Notes with Title '{title_value}':\n{table}{Style.RESET_ALL}"
 
 @input_error
 def find_note_by_tag(args: list[str], book: AddressBook) -> str:
@@ -715,7 +715,7 @@ def find_note_by_tag(args: list[str], book: AddressBook) -> str:
     for name, title, text, tag in found_notes:
         table.add_row([name, title, text, tag])
 
-    return f"{Fore.BLUE}Notes with Tag '{tag_value}':\n{table}{Style.RESET_ALL}"
+    return f"{Fore.GREEN}Notes with Tag '{tag_value}':\n{table}{Style.RESET_ALL}"
 
 
 @input_error
@@ -740,4 +740,4 @@ def show_all(book: AddressBook) -> str:
         email = str(record.email) if record.email else "–"
         address = str(record.address) if hasattr(record, 'address') and record.address else "–"
         table.add_row([record.name, phones, birthday, email, address])
-    return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
+    return f"{Fore.GREEN}{table}{Style.RESET_ALL}"

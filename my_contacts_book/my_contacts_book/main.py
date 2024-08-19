@@ -186,8 +186,8 @@ def print_help() -> str:
     - show-notes <name>: Shows the notes for the specified contact.
     - show-all-notes: Shows all notes with their tags.
     - show-all-notes-sorted-by-tag: Shows all notes sorted by their tags.
-    - find-note-by-title <title. Finds a notes by tytle.
-    - find-note-by-tag <tag. Finds a notes by tag.
+    - find-note-by-title <title>. Finds a notes by tytle.
+    - find-note-by-tag <tag>. Finds a notes by tag.
     - close / exit / bye: Exits the program.{Style.RESET_ALL}
     """
     return help_message
