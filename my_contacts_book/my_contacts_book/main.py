@@ -42,32 +42,6 @@ def load_data(filename: str = "addressbook.pkl") -> AddressBook:
         return AddressBook()
 
 
-# def save_notes(notes: Notes, filename: str = "notes.pkl") -> None:
-#     with open(filename, "wb") as file:
-#         # data = pickle.load(file)
-#         # data["notes"] = notes
-#         with open(filename, "wb") as file:
-#             pickle.dump(notes, file)
-#
-#
-# def load_notes(filename: str = "notes.pkl") -> Notes:
-#     try:
-#         with open(filename, "rb") as file:
-#             notes = pickle.load(file)
-#             for note in notes.notes:
-#                 if isinstance(note.content, str):
-#                     note.content = Content(note.content)
-#             return notes
-#     except FileNotFoundError:
-#         return Notes()
-
-
-# def sort_by_tag(self, tag: str) -> list:
-#         if not tag:
-#             raise ValueError("Tag is required")
-#         filtered_notes = self.find_note_by_tag(tag)
-#         return sorted(filtered_notes, key=lambda note: note.title.value)    
-
 def print_message(message: str, is_error: bool = False) -> None:
     """
     Prints a message in color based on whether it's an error or not.
@@ -90,8 +64,7 @@ def handle_action(action: str, args: list[str], book: AddressBook) -> str:
         action (str): The command to execute.
         args (list[str]): The arguments for the action.
         book (AddressBook): The address book instance.
-        notes (str): The notes for the comments.
-
+        
     Returns:
         str: The response string after executing the command.
     """

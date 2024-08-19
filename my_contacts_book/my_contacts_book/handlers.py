@@ -30,195 +30,6 @@ def input_error(func):
 
     return inner
 
-@input_error
-def add_note(args: list[str], book: AddressBook) -> str:
-    if len(args) != 2:
-        raise ValueError("Provide the contact name and the note title.")
-
-    name, title_value = args
-    record = book.find(name.capitalize())
-
-    if not record:
-        return f"Error: Contact {name} not found."
-
-    title_value = title_value.capitalize()
-
-    for note in record.notes:
-        if note.title.value == title_value:
-            return f"Error: Note with title '{title_value}' already exists for {name}."
-
-    text_value = input("Enter the text of the note: ").strip()
-    tag_value = input("Enter the tag for the note: ").strip()
-
-    note = Note(title_value, text_value, tag_value)
-    record.add_note(note)
-
-    return f"Note '{title_value}' added to {name}'s record."
-
-@input_error
-def show_notes(args: list[str], book: AddressBook) -> str:
-    """
-    Show all notes associated with a contact.
-
-    Args:
-        args (list[str]): The arguments for the command. Expected to be the contact's name.
-        book (AddressBook): The address book instance.
-
-    Returns:
-        str: A string representation of the notes for the contact or an error message.
-    """
-    if len(args) != 1:
-        raise ValueError("Provide the contact name.")
-
-    name = args[0].capitalize()
-    record = book.find(name)
-
-    if not record:
-        return f"Error: Contact {name} not found."
-
-    if not record.notes:
-        return f"Contact {name} has no notes."
-
-    table = PrettyTable()
-    table.field_names = ["Title", "Text", "Tag"]
-
-    for note in record.notes:
-        table.add_row([note.title, note.text, note.tag])
-
-    return f"Notes for contact {name}:\n{table}"
-
-
-@input_error
-def change_note(args: list[str], book: AddressBook) -> str:
-    if len(args) != 2:
-        raise ValueError("Provide the contact name and the note title.")
-
-    name, title_value = args
-    record = book.find(name.capitalize())
-
-    if not record:
-        return f"Error: Contact {name} not found."
-
-    title_value = title_value.capitalize()  
-
-    for note in record.notes:
-        if note.title.value == title_value:
-            new_text = input("Enter the new text for the note: ").strip()
-            new_tag = input("Enter the new tag for the note: ").strip()
-            note.text.value = new_text
-            note.tag.value = new_tag
-            return f"Note '{title_value}' has been updated for {name}."
-
-    return f"Error: Note with title '{title_value}' not found for {name}."
-
-@input_error
-def delete_note(args: list[str], book: AddressBook) -> str:
-    if len(args) != 2:
-        raise ValueError("Provide the contact name and the note title.")
-
-    name, title_value = args
-    record = book.find(name.capitalize())
-
-    if not record:
-        return f"Error: Contact {name} not found."
-
-    title_value = title_value.capitalize()  
-
-    for note in record.notes:
-        if note.title.value == title_value:
-            record.notes.remove(note)
-            return f"Note '{title_value}' has been deleted from {name}'s record."
-
-    return f"Error: Note with title '{title_value}' not found for {name}."
-
-@input_error
-def show_all_notes(book: AddressBook) -> str:
-    table = PrettyTable()
-    table.field_names = ["Name", "Title", "Text", "Tag"]
-
-    notes_found = False
-
-    for record in book.values():
-        if record.notes: 
-            for note in record.notes:
-                table.add_row([record.name.value, note.title.value, note.text.value, note.tag.value])
-            notes_found = True
-
-    if notes_found:
-        return f"All contacts with notes:\n{table}"
-    else:
-        return "No contacts with notes found."
-    
-@input_error
-def show_all_notes_sorted_by_tag(book: AddressBook) -> str:
-    table = PrettyTable()
-    table.field_names = ["Name", "Title", "Text", "Tag"]
-
-    notes_list = []
-
-    for record in book.values():
-        if record.notes:  
-            for note in record.notes:
-                notes_list.append((record.name.value, note.title.value, note.text.value, note.tag.value))
-
-    if not notes_list:
-        return "No contacts with notes found."
- 
-    notes_list.sort(key=lambda x: x[3].lower())  
-
-    
-    for name, title, text, tag in notes_list:
-        table.add_row([name, title, text, tag])
-
-    return f"All contacts with notes (sorted by tag):\n{table}"
-
-@input_error
-def find_note_by_title(args: list[str], book: AddressBook) -> str:
-    if len(args) != 1:
-       raise ValueError("Provide the title of the note to search.")
-
-    title_value = args[0].capitalize()  
-    table = PrettyTable()
-    table.field_names = ["Name", "Title", "Text", "Tag"]
-
-    found_notes = []
-
-    for record in book.values():
-        for note in record.notes:
-            if note.title.value == title_value:
-                found_notes.append((record.name.value, note.title.value, note.text.value, note.tag.value))
-
-    if not found_notes:
-        return f"No notes found with Title '{title_value}'."
-
-    for name, title, text, tag in found_notes:
-        table.add_row([name, title, text, tag])
-
-    return f"Notes with Title '{title_value}':\n{table}"
-
-@input_error
-def find_note_by_tag(args: list[str], book: AddressBook) -> str:
-    if len(args) != 1:
-        raise ValueError("Provide the tag of the note to search.")
-
-    tag_value = args[0].lower()
-    table = PrettyTable()
-    table.field_names = ["Name", "Title", "Text", "Tag"]
-
-    found_notes = []
-
-    for record in book.values():
-        for note in record.notes:
-            if note.tag.value.lower() == tag_value:
-                found_notes.append((record.name.value, note.title.value, note.text.value, note.tag.value))
-
-    if not found_notes:
-        return f"No notes found with Tag '{tag_value}'."
-
-    for name, title, text, tag in found_notes:
-        table.add_row([name, title, text, tag])
-
-    return f"Notes with Tag '{tag_value}':\n{table}"
 
 @input_error
 def add_contact(args: List[str], book: AddressBook) -> str:
@@ -251,9 +62,9 @@ def add_contact(args: List[str], book: AddressBook) -> str:
         if birthday:
             record.add_birthday(birthday)
         book.add_record(record)
-        return f"{Fore.GREEN}Contact added.{Style.RESET_ALL}"
+        return f"{Fore.GREEN}Contact {name} added.{Style.RESET_ALL}"
 
-    return f"{Fore.GREEN}Contact updated.{Style.RESET_ALL}"
+    return f"{Fore.GREEN}Contact {name} updated.{Style.RESET_ALL}"
 
 
 @input_error
@@ -275,7 +86,7 @@ def change_contact(args: List[str], book: AddressBook) -> str:
         if record:
             record.edit_phone(old_phone, new_phone)
             return f"{Fore.GREEN}Phone number updated.{Style.RESET_ALL}"
-        return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+        return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
     elif len(args) == 2:
         name, phone_to_remove = args
@@ -286,8 +97,8 @@ def change_contact(args: List[str], book: AddressBook) -> str:
                 record.remove_phone(phone_to_remove)
                 return f"{Fore.GREEN}Phone number removed.{Style.RESET_ALL}"
             else:
-                return f"{Fore.YELLOW}Phone number not found in the contact.{Style.RESET_ALL}"
-        return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+                return f"{Fore.YELLOW}Phone number not found in the contact {name}.{Style.RESET_ALL}"
+        return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
     else:
         raise ValueError("Give me name, old phone and new phone please or name and phone to remove.")
@@ -321,7 +132,7 @@ def show_contact(args: List[str], book: AddressBook) -> str:
 
         table.add_row([record.name, phones, birthday, email, address])
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
 @input_error
@@ -337,14 +148,14 @@ def delete_contact(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) != 1:
-        raise ValueError("Error: Give me name, please.")
+        raise ValueError("Give me name, please.")
 
     name = args[0].capitalize()
     record = book.find(name)
     if record:
         book.delete(name)
-        return f"{Fore.GREEN}Contact deleted.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+        return f"{Fore.GREEN}Contact {name} deleted.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
 @input_error
@@ -366,7 +177,7 @@ def change_name(args: list[str], book: AddressBook) -> str:
     new_name = args[1].capitalize()
 
     if old_name not in book:
-        return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+        return f"{Fore.YELLOW}Contact {old_name} not found.{Style.RESET_ALL}"
 
     if new_name in book:
         return f"{Fore.YELLOW}Contact with this name {new_name} already exists.{Style.RESET_ALL}"
@@ -401,7 +212,7 @@ def show_phone(args: List[str], book: AddressBook) -> str:
         phones = ", ".join([str(phone) for phone in record.phones])
         table.add_row([name, phones])
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
 @input_error
@@ -425,10 +236,10 @@ def add_birthday(args: List[str], book: AddressBook, action: str) -> str:
     if record:
         record.add_birthday(birthday)
         if(action == 'add-birthday'):
-            return f"{Fore.GREEN}Birthday added.{Style.RESET_ALL}"
+            return f"{Fore.GREEN}Birthday added for {name}.{Style.RESET_ALL}"
         else:
            return f"{Fore.GREEN}{name}`s birthday updated.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
 @input_error
@@ -444,7 +255,7 @@ def show_birthday(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) != 1:
-        raise ValueError("Error: Give me name, please.")
+        raise ValueError("Give me name, please.")
 
     name = args[0].capitalize()
     record = book.find(name)
@@ -454,7 +265,7 @@ def show_birthday(args: List[str], book: AddressBook) -> str:
         birthday = str(record.birthday) if record.birthday else "No birthday set"
         table.add_row([name, birthday])
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
 @input_error
@@ -501,10 +312,10 @@ def add_email(args: List[str], book: AddressBook, action:str) -> str:
     if record:
         record.add_email(email)
         if(action == 'add-email'):
-            return f"{Fore.GREEN}Email added.{Style.RESET_ALL}"
+            return f"{Fore.GREEN}Email added for {name}.{Style.RESET_ALL}"
         else:
             return f"{Fore.GREEN}{name}`s email has been changed.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
 @input_error
@@ -520,14 +331,14 @@ def delete_email(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) != 1:
-        raise ValueError("Error: Give me name, please.")
+        raise ValueError("Give me name, please.")
     
     name = args[0].capitalize()
     record = book.find(name)
     if record:
         record.add_email('-')
         return f"{Fore.GREEN}{name}`s email has been deleted.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
 @input_error
@@ -543,7 +354,7 @@ def show_email(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) != 1:
-        raise ValueError("Error: Give me name, please.")
+        raise ValueError("Give me name, please.")
 
     name = args[0].capitalize()
     record = book.find(name)
@@ -553,7 +364,7 @@ def show_email(args: List[str], book: AddressBook) -> str:
         email = str(record.email) if record.email else "-"
         table.add_row([name, email])
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}CContact {name} not found.{Style.RESET_ALL}"
 
 
 @input_error
@@ -579,10 +390,10 @@ def add_address(args: List[str], book: AddressBook, action:str) -> str:
     if record:
         record.add_address(address)
         if(action =='add-address'):
-            return f"{Fore.GREEN}Address added.{Style.RESET_ALL}"
+            return f"{Fore.GREEN}Address added for {name}.{Style.RESET_ALL}"
         else:
             return f"{Fore.GREEN}{name}`s address has been changed.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}{name} contact not found.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
 @input_error
@@ -598,14 +409,14 @@ def delete_address(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) != 1:
-        raise ValueError("Error: Give me name, please.")
+        raise ValueError("Give me name, please.")
     
     name = args[0].capitalize()
     record = book.find(name)
     if record:
         record.add_address('–')
         return f"{Fore.GREEN}{name}`s address has been deleted.{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
 
 
 @input_error
@@ -621,7 +432,7 @@ def show_address(args: List[str], book: AddressBook) -> str:
         str: The response message.
     """
     if len(args) != 1:
-        raise ValueError("Error: Give me name, please.")
+        raise ValueError("Give me name, please.")
     
     name = args[0].capitalize()
     record = book.find(name)
@@ -631,7 +442,280 @@ def show_address(args: List[str], book: AddressBook) -> str:
         address = str(record.address) if record.address else "-"
         table.add_row([name, address])
         return f"{Fore.BLUE}{table}{Style.RESET_ALL}"
-    return f"{Fore.YELLOW}Contact not found.{Style.RESET_ALL}"
+    return f"{Fore.YELLOW}Contact {name} not found.{Style.RESET_ALL}"
+
+@input_error
+def add_note(args: list[str], book: AddressBook) -> str:
+    """
+    Adds a new note to the specified contact in the address book.
+
+    Args:
+        args (list[str]): A list containing the contact name and the note title.
+        book (AddressBook): The address book where the contact is stored.
+
+    Returns:
+        str: A message indicating the result of the operation.
+
+    Raises:
+        ValueError: If the number of arguments provided is not equal to 2.
+    """
+    if len(args) != 2:
+        raise ValueError("Provide the contact name and the note title.")
+
+    name, title_value = args
+    record = book.find(name.capitalize())
+
+    if not record:
+        return f"{Fore.YELLOW}Error: Contact {name} not found.{Style.RESET_ALL}"
+
+    title_value = title_value.capitalize()
+
+    for note in record.notes:
+        if note.title.value == title_value:
+            return f"{Fore.YELLOW}Error: Note with title '{title_value}' already exists for {name}.{Style.RESET_ALL}"
+
+    text_value = input("Enter the text of the note: ").strip()
+    tag_value = input("Enter the tag for the note: ").strip()
+
+    note = Note(title_value, text_value, tag_value)
+    record.add_note(note)
+
+    return f"{Fore.BLUE}Note '{title_value}' added to {name}'s record.{Style.RESET_ALL}"
+
+@input_error
+def show_notes(args: list[str], book: AddressBook) -> str:
+    """
+    Show all notes associated with a contact.
+
+    Args:
+        args (list[str]): The arguments for the command. Expected to be the contact's name.
+        book (AddressBook): The address book instance.
+
+    Returns:
+        str: A string representation of the notes for the contact or an error message.
+    """
+    if len(args) != 1:
+        raise ValueError("Provide the contact name.")
+
+    name = args[0].capitalize()
+    record = book.find(name)
+
+    if not record:
+        return f"{Fore.YELLOW}Error: Contact {name} not found.{Style.RESET_ALL}"
+
+    if not record.notes:
+        return f"{Fore.YELLOW}Contact {name} has no notes.{Style.RESET_ALL}"
+
+    table = PrettyTable()
+    table.field_names = ["Title", "Text", "Tag"]
+
+    for note in record.notes:
+        table.add_row([note.title, note.text, note.tag])
+
+    return f"{Fore.BLUE}Notes for contact {name}:\n{table}{Style.RESET_ALL}"
+
+
+@input_error
+def change_note(args: list[str], book: AddressBook) -> str:
+    """
+    Updates the text and tag of an existing note for a specified contact in the address book.
+
+    Args:
+        args (list[str]): A list containing the contact name and the note title.
+        book (AddressBook): The address book where the contact is stored.
+
+    Returns:
+        str: A message indicating the result of the operation.
+
+    Raises:
+        ValueError: If the number of arguments provided is not equal to 2.
+    """
+    if len(args) != 2:
+        raise ValueError("Provide the contact name and the note title.")
+
+    name, title_value = args
+    record = book.find(name.capitalize())
+
+    if not record:
+        return f"{Fore.YELLOW}Error: Contact {name} not found.{Style.RESET_ALL}"
+    
+    title_value = title_value.capitalize()  
+
+    for note in record.notes:
+        if note.title.value == title_value:
+            new_text = input("Enter the new text for the note: ").strip()
+            new_tag = input("Enter the new tag for the note: ").strip()
+            note.text.value = new_text
+            note.tag.value = new_tag
+            return f"{Fore.BLUE}Note '{title_value}' has been updated for {name}.{Style.RESET_ALL}"
+
+    return f"{Fore.YELLOW}Error: Note with title '{title_value}' not found for {name}.{Style.RESET_ALL}"
+
+@input_error
+def delete_note(args: list[str], book: AddressBook) -> str:
+    """
+    Deletes a note with the specified title from a contact's record in the address book.
+
+    Args:
+        args (list[str]): A list containing the contact name and the note title.
+        book (AddressBook): The address book where the contact and note are stored.
+
+    Returns:
+        str: A message indicating the result of the deletion operation.
+
+    Raises:
+        ValueError: If the number of arguments provided is not equal to 2.
+    """
+    if len(args) != 2:
+        raise ValueError("Provide the contact name and the note title.")
+
+    name, title_value = args
+    record = book.find(name.capitalize())
+
+    if not record:
+        return f"{Fore.YELLOW}Error: Contact {name} not found.{Style.RESET_ALL}"
+
+    title_value = title_value.capitalize()  
+
+    for note in record.notes:
+        if note.title.value == title_value:
+            record.notes.remove(note)
+            return f"{Fore.BLUE}Note '{title_value}' has been deleted from {name}'s record.{Style.RESET_ALL}"
+
+    return f"{Fore.YELLOW}Error: Note with title '{title_value}' not found for {name}.{Style.RESET_ALL}"
+
+@input_error
+def show_all_notes(book: AddressBook) -> str:
+    """
+    Displays all contacts with their corresponding notes in a tabular format.
+
+    Args:
+        book (AddressBook): The address book containing the contacts and their notes.
+
+    Returns:
+        str: A formatted table of contacts with notes, or a message if no contacts with notes are found.
+    """
+    table = PrettyTable()
+    table.field_names = ["Name", "Title", "Text", "Tag"]
+
+    notes_found = False
+
+    for record in book.values():
+        if record.notes: 
+            for note in record.notes:
+                table.add_row([record.name.value, note.title.value, note.text.value, note.tag.value])
+            notes_found = True
+
+    if notes_found:
+        return f"{Fore.BLUE}All contacts with notes:\n{table}{Style.RESET_ALL}"
+    else:
+        return f"{Fore.YELLOW}No contacts with notes found.{Style.RESET_ALL}"
+    
+@input_error
+def show_all_notes_sorted_by_tag(book: AddressBook) -> str:
+    """
+    Displays all contacts with their corresponding notes, sorted by the note's tag, in a tabular format.
+
+    Args:
+        book (AddressBook): The address book containing the contacts and their notes.
+
+    Returns:
+        str: A formatted table of contacts with notes sorted by tag, or a message if no contacts with notes are found.
+    """
+    table = PrettyTable()
+    table.field_names = ["Name", "Title", "Text", "Tag"]
+
+    notes_list = []
+
+    for record in book.values():
+        if record.notes:  
+            for note in record.notes:
+                notes_list.append((record.name.value, note.title.value, note.text.value, note.tag.value))
+
+    if not notes_list:
+        return f"{Fore.YELLOW}No contacts with notes found.{Style.RESET_ALL}"
+ 
+    notes_list.sort(key=lambda x: x[3].lower())  
+
+    
+    for name, title, text, tag in notes_list:
+        table.add_row([name, title, text, tag])
+
+    return f"{Fore.BLUE}All contacts with notes (sorted by tag):\n{table}{Style.RESET_ALL}"
+
+@input_error
+def find_note_by_title(args: list[str], book: AddressBook) -> str:
+    """
+    Searches for and displays all notes with a specific title across all contacts in the address book.
+
+    Args:
+        args (list[str]): A list containing a single string, the title of the note to search for.
+        book (AddressBook): The address book containing the contacts and their notes.
+
+    Returns:
+        str: A formatted table of notes with the specified title, or a message if no notes with that title are found.
+
+    Raises:
+        ValueError: If the number of arguments is not equal to one (i.e., the title is not provided).
+    """
+    if len(args) != 1:
+       raise ValueError("Provide the title of the note to search.")
+
+    title_value = args[0].capitalize()  
+    table = PrettyTable()
+    table.field_names = ["Name", "Title", "Text", "Tag"]
+
+    found_notes = []
+
+    for record in book.values():
+        for note in record.notes:
+            if note.title.value == title_value:
+                found_notes.append((record.name.value, note.title.value, note.text.value, note.tag.value))
+
+    if not found_notes:
+        return f"{Fore.YELLOW}No notes found with Title '{title_value}'.{Style.RESET_ALL}"
+
+    for name, title, text, tag in found_notes:
+        table.add_row([name, title, text, tag])
+
+    return f"{Fore.BLUE}Notes with Title '{title_value}':\n{table}{Style.RESET_ALL}"
+
+@input_error
+def find_note_by_tag(args: list[str], book: AddressBook) -> str:
+    """
+    Searches for and displays all notes with a specific tag across all contacts in the address book.
+
+    Args:
+        args (list[str]): A list containing a single string, the tag of the note to search for.
+        book (AddressBook): The address book containing the contacts and their notes.
+
+    Returns:
+        str: A formatted table of notes with the specified tag, or a message if no notes with that tag are found.
+
+    Raises:
+        ValueError: If the number of arguments is not equal to one (i.e., the tag is not provided).
+    """
+    if len(args) != 1:
+        raise ValueError("Provide the tag of the note to search.")
+
+    tag_value = args[0].lower()
+    table = PrettyTable()
+    table.field_names = ["Name", "Title", "Text", "Tag"]
+
+    found_notes = []
+
+    for record in book.values():
+        for note in record.notes:
+            if note.tag.value.lower() == tag_value:
+                found_notes.append((record.name.value, note.title.value, note.text.value, note.tag.value))
+
+    if not found_notes:
+        return f"{Fore.YELLOW}No notes found with Tag '{tag_value}'.{Style.RESET_ALL}"
+
+    for name, title, text, tag in found_notes:
+        table.add_row([name, title, text, tag])
+
+    return f"{Fore.BLUE}Notes with Tag '{tag_value}':\n{table}{Style.RESET_ALL}"
 
 
 @input_error

@@ -33,9 +33,7 @@ class Record:
         self.address: Optional[Address] = None
         self.notes: Optional[List[Note]] = []
 
-    def add_note(self, note: Note) -> None:
-            self.notes.append(note)
-
+    
     def add_phone(self, phone: str) -> None:
         """
         Adds a phone number to the contact.
@@ -107,6 +105,9 @@ class Record:
             address (str): The address as a string.
         """
         self.address = Address(address)
+        
+    def add_note(self, note: Note) -> None:
+            self.notes.append(note)
 
     def __str__(self) -> str:
         """
